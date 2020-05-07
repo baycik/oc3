@@ -30,26 +30,16 @@
 			]]></add>
         </operation>
     </file>
-  <file  path="admin/model/catalog/product.php">
-	<operation error="skip">
-	  <search><![CDATA[public function editProduct($product_id, $data) {
-                        ]]>
-            </search>
-	  <add position="before" offset="0"><![CDATA[
-		   ]]></add>
-	
-	</operation>
-  </file> 
-  <file  path="admin/language/tr-tr/common/column_left.php">
-	<operation error="skip">
-	  <search><![CDATA[// Text]]></search>
-	  <add position="after" offset="0"><![CDATA[$_['text_spreadsheetsync']  = 'Toplu Ürün İthalatı';]]></add>
-	</operation>
-  </file>
-  <file  path="admin/language/en-gb/common/column_left.php">
-	<operation error="skip">
-	  <search><![CDATA[// Text]]></search>
-	  <add position="after" offset="0"><![CDATA[$_['text_spreadsheetsync']  = 'Bulk Product Import';]]></add>
-	</operation>
-  </file>
+    <file  path="admin/language/tr-tr/common/column_left.php">
+          <operation error="skip">
+            <search><![CDATA[// Text]]></search>
+            <add position="after" offset="0"><![CDATA[$_['text_bulksync']  = 'Toplu Ürün İthalatı';]]></add>
+          </operation>
+    </file>
+    <file  path="admin/language/en-gb/common/column_left.php">
+          <operation error="skip">
+            <search><![CDATA[// Text]]></search>
+            <add position="after" offset="0"><![CDATA[$_['text_bulksync']  = 'Bulk Product Import';]]></add>
+          </operation>
+    </file>
 </modification>
