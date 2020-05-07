@@ -131,14 +131,19 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
     	    $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_list SET sync_config='$parser_config' WHERE sync_id='$sync_id'");
     	}
     }
-    public function getParserList(){
-        $directory = str_replace("\\", "/", __DIR__.'/parsers/');
-	$parsers = array_diff(scandir($directory), array('..', '.'));
-        
+    public function getParserList($user_id){
+        $added_parsers=$this->getSyncList($user_id);
         $allowed_parsers=[];
-	foreach ($parsers as $parser_file_name) {
-            include __DIR__.'/parsers/'.$parser_file_name;
-            $allowed_parsers[$parser_file_name]=$parser_name;
+        foreach($this->parser_registry as $parser_id=>$available){
+            if( isset($available['exclusive_owner']) && !in_array($user_id, $available['exclusive_owner']) ){
+                continue;
+            }
+            foreach($added_parsers as $added){
+                if( $added['sync_parser_name']==$parser_id ){
+                    continue 2;
+                }
+            }
+            $allowed_parsers[$parser_id]=$available;
         }
         return $allowed_parsers;
     }

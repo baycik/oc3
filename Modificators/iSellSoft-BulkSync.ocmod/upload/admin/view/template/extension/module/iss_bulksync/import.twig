@@ -96,7 +96,7 @@
                                 <table class="table table-bordered" style="font-size: 13px;">
                                     <thead>
                                         <tr>
-                                            <td style="" class="text-center" colspan="3">{{text_category_name}}</td>
+                                            <td style="" class="text-center" colspan="3">{{text_product_group}}</td>
                                             <td style="" class="text-left">{{text_total_products}}</td>
                                             <td class="text-left">{{text_comission}}</td>
                                             <td class="text-left">{{text_dest_cat}}</td>
@@ -105,35 +105,32 @@
                                     <tbody>
                                         {% if categories %}
                                             {% for category in categories %}
-                                                <tr class="x-form-row {% if category.destination_categories %}selected-row{% endif %}">
+                                                <tr class="x-form-row {% if category.destination_categories %}selected-row{% endif %}" data-group_id="{{ category.group_id }}">
                                                     <td class="text-left category_lvl" >{% if category.category_lvl1 %}{{ category.category_lvl1 }}/{% endif %}</td>
                                                     <td class="text-left category_lvl">{% if category.category_lvl2 %}{{ category.category_lvl2 }}/{% endif %}</td>
 
                                                     <td class="text-left category_lvl">{% if category.category_lvl3 %}{{ category.category_lvl3 }}/{% endif %}</td>
                                                     <td class="text-left">{{ category.total_products }}</td>
                                                     <td class="text-left">
-                                                        <input style=""  type="text" name="category_comission" value="{{ category.comission }}" placeholder="%" id="input-quantity" class="pts-form-control" />
+                                                        <input style=""  type="text" name="category_comission" value="{{ category.comission }}" placeholder="%" data-group_id="{{ category.group_id }}" class="form-control" />
                                                     </td>
-                                                    <td class="text-left">
-                                                        <div class="col-sm-10">
-                                                                <input type="text" name="category" value="" placeholder="{{ entry_category }}" id="{{ category.group_id }}" class="form-control"/>
-                                                                <div class="destination-category-panel" class="well well-sm" style="overflow: auto;"> 
-                                                                    {% set destination_category_list = category.destination_categories|split('||') %}
-                                                                    {% for destination_category in  destination_category_list %}
-                                                                        {% for allowed_category in all_categories %}
-                                                                           {% if destination_category == allowed_category.category_id %} 
-                                                                            <div id="category_{{ allowed_category.category_id }}">
-                                                                                <i class="fa fa-minus-circle" id="{{allowed_category.category_id}}_{{ category.group_id }}"></i> 
-                                                                                {{ allowed_category.name }}
-                                                                            </div>
-                                                                            {% endif %}
-                                                                        {% endfor %}
-                                                                    {% endfor %}
-                                                                </div>
+                                                    <td class="text-left" data-group_id="{{ category.group_id }}">
+                                                        <input type="text" name="category" value="" placeholder="{{ entry_category }}"class="form-control"/>
+                                                        <div class="destination-category-panel" class="well well-sm" style="overflow: auto;"> 
+                                                            {% set destination_category_list = category.destination_categories|split('||') %}
+                                                            {% for destination_category in  destination_category_list %}
+                                                                {% for allowed_category in all_categories %}
+                                                                   {% if destination_category == allowed_category.category_id %} 
+                                                                    <div id="category_{{ allowed_category.category_id }}">
+                                                                        <i class="fa fa-minus-circle" id="{{allowed_category.category_id}}_{{ category.group_id }}"></i> 
+                                                                        {{ allowed_category.name }}
+                                                                    </div>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endfor %}
                                                         </div>
                                                         <input autocomplete="off" type="hidden" id="destination_categories_{{ category.group_id }}" name="destination_category" value="|{{ category.destination_categories }}|"/>
                                                         <input autocomplete="off" type="hidden" name="group_id" value="{{ category.group_id }}"/>
-                                                        
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -144,6 +141,7 @@
                                         {% endif %}
                                     </tbody>
                                 </table>
+                                    <br><br><br><br><br><br><br><br>
                             </div>
                         </form>
                         <div class="row">
@@ -158,29 +156,28 @@
     </div>
     <script type="text/javascript">
 	var sync_id = "{{sync_id}}";
-	var seller_id = "{{seller_id}}";
-	$("#form-import input,#form-import input[name='destination_category']").on('change', function (e) {
+	$("#form-import input").on('change', function (e) {
 	    e.preventDefault();
 	    savePrefs(e.target);
 	});
         
-        function savePrefs(e){
-            var row_node = $(e).parent().parent();
+        function savePrefs( node ){
+            var group_id=$(node).data('group_id');
+            var $row_node=$(`tr[data-group_id=${group_id}]`);
 	    var item = {
-		group_id: row_node.find('input[name=group_id]').val(),
-		category_comission: row_node.find('input[name=category_comission]').val().replace(/[^\d\.]/g, ''),
-		destination_categories: row_node.find('input[name=destination_category]').val().substring(1).slice(0,-1) 
+		group_id: group_id,
+		category_comission: $row_node.find('input[name=category_comission]').val().replace(/[^\d\.]/g, ''),
+		destination_categories: $row_node.find('input[name=destination_category]').val().substring(1).slice(0,-1) 
 	    };
 	    if (item.destination_categories !== "") {
-		row_node.addClass('selected-row');
+		$row_node.addClass('selected-row');
 	    } else {
-		row_node.removeClass('selected-row');
+		$row_node.removeClass('selected-row');
 	    }
-	    $.post('index.php?route=extension/module/iss_supersync/saveImportPrefs&user_token={{ user_token }}', {data: JSON.stringify(item)}, function (ok) {
+	    $.post('index.php?route=extension/module/iss_bulksync_import/saveImportPrefs&user_token={{ user_token }}', {data: JSON.stringify(item)}, function (ok) {
 		if (!ok * 1) {
-		    alert("Возникла ошибка сохранения");
-		}
-		;
+		    alert("{{text_save_setting_failed}}");
+		};
 	    });
         }
         
@@ -188,14 +185,14 @@
 	var current_progress = 0;
 
 	$("#button-import").on('click', function () {
-	    if (confirm('Вы уверены, что готовы начать импорт?')) {
-		$('.progress-header').html('Начинаем импортировать...');
+	    if (confirm('{{text_confirm}}')) {
+		$('.progress-header').html('{{text_import_starting}}');
 		$('#spinner_icon').show();
 		$(".btn-secondary").attr('disabled', '');
-		$.post('index.php?route=extension/module/iss_supersync/getTotalImportCategories&user_token={{ user_token }}', {sync_id: sync_id}, function (total) {
+		$.post('index.php?route=extension/module/iss_bulksync_import/getTotalImportCategories&user_token={{ user_token }}', {sync_id: sync_id}, function (total) {
 		    var totalCategories = JSON.parse(total);
 		    step_size = 100 / totalCategories.total_rows;
-		    $('.progress-header').val('Идет процесс импорта товаров...Импортировано ' + Math.round(current_progress) + '% товаров');
+		    $('.progress-header').val('{{text_import_progress}} ' + Math.round(current_progress) + '%');
 		    continueImport(totalCategories);
 		});
 	    }
@@ -205,39 +202,38 @@
 	    if (totalCategories.total_rows == 0) {
                 current_progress=0;
 		$('.progress-bar').width('100%');
-		$('.progress-header').html('Удаление отсутствующих товаров...');
-		$.post('index.php?route=extension/module/iss_supersync/deleteAbsentProducts&user_token={{ user_token }}').done(function(){
-		    $('.progress-header').html('Импорт завершен');
+		$('.progress-header').html('{{text_delete_absent}}');
+		$.post('index.php?route=extension/module/iss_bulksync_import/deleteAbsentProducts&user_token={{ user_token }}').done(function(){
+		    $('.progress-header').html('{{text_import_finished}}');
 		    $('#spinner_icon').hide();
 		    $(".btn-secondary").attr('disabled', null);
-		    alert('Импорт завершен успешно!');
+		    alert('{{text_import_finished}}');
 		});
 		return;
 	    }
-	    $.post('index.php?route=extension/module/iss_supersync/importUserProducts&user_token={{ user_token }}', {sync_id: sync_id, group_id: totalCategories.groups[0]}).done(function (ok) {
+	    $.post('index.php?route=extension/module/iss_bulksync_import/importUserProducts&user_token={{ user_token }}', {sync_id: sync_id, group_id: totalCategories.groups[0]}).done(function (ok) {
 		if (ok && totalCategories.total_rows > 0) {
 		    current_progress += step_size;
 		    totalCategories.total_rows -= 1;
 		    totalCategories.groups.shift()
-		    $('.progress-header').html('Идет процесс импорта товаров...Импортировано ' + Math.round(current_progress) + '% товаров');
+		    $('.progress-header').html('{{text_import_progress}} ' + Math.round(current_progress) + '%');
 		    $('.progress-bar').width(current_progress + '%');
 		    continueImport(totalCategories);
 		} else {
                     current_progress=0;
 		    $('#spinner_icon').hide();
 		    $(".btn-secondary").attr('disabled', null);
-		    alert('Ошибка импорта!');
+		    alert('{{text_import_failed}}');
 		}
 	    }).fail(function(){
-                //timeout???
                 continueImport(totalCategories);
             });
 	}
         // Category
           $('input[name=\'category\']').autocomplete({
-                'source': function(request, response) {
+                source: function(request, response) {
                     $.ajax({
-                        url: 'index.php?route=extension/module/iss_supersync/autocompleteCategories&user_token={{ user_token }}&filter_name=' + encodeURIComponent(request),
+                        url: 'index.php?route=extension/module/iss_bulksync_import/autocompleteCategories&user_token={{ user_token }}&filter_name=' + encodeURIComponent(request),
                         dataType: 'json',
                         success: function(json) {
                                 response($.map(json, function(item) {
@@ -249,25 +245,20 @@
                         }
                     });
                 },
-                'select': function(item) {
-                    var group_id = $(this).attr('id');
+                select: function(item) {
+                    var group_id = $(this).parent().data('group_id');
                     var input_value =  $('#destination_categories_'+group_id).val();
-                    
-                    
                     var in_the_middle = ((input_value.indexOf('|'+item['value']+'|') > -1));
-                    
                     if(in_the_middle){
                         return;
-                    }    
-                    
+                    }
                     $('#destination_categories_'+group_id).val(input_value+'|'+item['value']+'|');
-                    $('#'+group_id).next().next().append('<div id="category' + item['value'] + '"><i class="fa fa-minus-circle" id="'+item['value']+'_'+group_id+'"></i> ' + item['label'] + '</div>');
+                    $(this).next().next().append('<div id="category' + item['value'] + '"><i class="fa fa-minus-circle" id="'+item['value']+'_'+group_id+'"></i> ' + item['label'] + '</div>');
                     savePrefs(this.parentElement);
                 }
           });
 
           $('.destination-category-panel').delegate('.fa-minus-circle', 'click', function() {
-                console.log(this);
                 var category_id = $(this).attr('id').split('_')[0];
                 var group_id = $(this).attr('id').split('_')[1];
                 var input_value = $('#destination_categories_'+group_id).val();

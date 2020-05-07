@@ -1,16 +1,16 @@
 <?php
 
-class ControllerExtensionModuleIssBulkSyncParserlist extends Controller {
+class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
     
     private $error = array();
 
     public function index() {
-        $this->load->language('extension/module/iss_bulksync/parserlist');
+        $this->load->language('extension/module/iss_bulksync/setup');
 
 	$this->document->setTitle($this->language->get('heading_title'));
         
         
-	$data['back'] = $this->url->link('extension/module/iss_bulksync_parserlist', '', true);
+	$data['back'] = $this->url->link('extension/module/iss_bulksync_setup', '', true);
                
 	$url = '';
         
@@ -23,7 +23,7 @@ class ControllerExtensionModuleIssBulkSyncParserlist extends Controller {
 
 	$data['breadcrumbs'][] = array(
 	    'text' => $this->language->get('heading_title'),
-	    'href' => $this->url->link('extension/module/iss_bulksync_parserlist', $url, true)
+	    'href' => $this->url->link('extension/module/iss_bulksync_setup', $url, true)
 	);
         $user_id = $this->customer->getId();
         $data['user_token'] = $this->session->data['user_token'];
@@ -35,13 +35,23 @@ class ControllerExtensionModuleIssBulkSyncParserlist extends Controller {
 	$data['footer'] = $this->load->controller('common/footer');
 	$data['header'] = $this->load->controller('common/header');
 	$data['user_id'] = $user_id;
+        $data['source_column_options']=$this->getColumnNumbers();
         
 	$this->load->model('extension/module/iss_bulksync/setup');
         $this->model_extension_module_iss_bulksync_setup->updateDb();
         $data['sync_list'] = $this->model_extension_module_iss_bulksync_setup->getSyncList($user_id);
         $data['parser_list'] = $this->model_extension_module_iss_bulksync_setup->getParserList($user_id);
        
-	$this->response->setOutput($this->load->view('extension/module/iss_bulksync/parserlist', $data));
+	$this->response->setOutput($this->load->view('extension/module/iss_bulksync/setup', $data));
+    }
+    
+    private function getColumnNumbers(){
+        $options="<option value='-'>-</option>";
+        foreach( range('A', 'Z') as $i=>$lett) {
+            $num=$i+1;
+            $options.="<option value='$num-$lett'>$num-$lett</option>";
+        }
+        return $options;
     }
        
     public function startParsing(){
@@ -74,7 +84,7 @@ class ControllerExtensionModuleIssBulkSyncParserlist extends Controller {
         $seller_id = $this->customer->getId();
         $this->load->model('extension/module/iss_bulksync/setup');
         $this->model_extension_module_iss_bulksync_setup->addParser($seller_id,$parser_id);
-        $this->response->redirect($this->url->link('extension/module/iss_bulksync_parserlist', 'user_token=' . $this->session->data['user_token'], true));
+        $this->response->redirect($this->url->link('extension/module/iss_bulksync_setup', 'user_token=' . $this->session->data['user_token'], true));
     }
     
     public function deleteParser(){

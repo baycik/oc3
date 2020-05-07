@@ -9,10 +9,10 @@
                         ]]>
             </search>
             <add position="before" offset="0"><![CDATA[ 
-                            if ($this->user->hasPermission('access', 'extension/module/iss_bulksync_parserlist')) {
+                            if ($this->user->hasPermission('access', 'extension/module/iss_bulksync_setup')) {
                                     $catalog[] = array(
-                                            'name'	   => $this->language->get('text_spreadsheetsync'),
-                                            'href'     => $this->url->link('extension/module/iss_bulksync_parserlist', 'user_token=' . $this->session->data['user_token'], true),
+                                            'name'     => $this->language->get('text_bulksync'),
+                                            'href'     => $this->url->link('extension/module/iss_bulksync_setup', 'user_token=' . $this->session->data['user_token'], true),
                                             'children' => array()		
                                     );
                             }
