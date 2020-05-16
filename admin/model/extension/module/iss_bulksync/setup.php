@@ -117,20 +117,28 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
         $parser_config= json_encode($parser_object, JSON_UNESCAPED_UNICODE);
         $this->db->query("INSERT INTO " . DB_PREFIX . "iss_sync_list SET user_id='$user_id', sync_parser_name='{$parser_id}', sync_name='{$parser_object['name']}',sync_config='$parser_config'");
     }
-    public function deleteParser($user_id,$sync_id){
-        $this->db->query("DELETE FROM " . DB_PREFIX . "iss_sync_list WHERE sync_id=".(int) $sync_id." AND user_id=".(int)$user_id );
+    
+    public function getSyncList ( $sync_id=0 ){
+        $where="";
+        if( $sync_id ){
+            $where=" WHERE sync_id='$sync_id'";
+        }
+        $sql="SELECT * FROM " . DB_PREFIX . "iss_sync_list $where";
+        return $this->db->query($sql)->rows;
+    }
+
+    public function deleteSync($sync_id){
+        $this->db->query("DELETE FROM " . DB_PREFIX . "iss_sync_list WHERE sync_id=".(int) $sync_id );
         $this->db->query("DELETE FROM " . DB_PREFIX . "iss_sync_groups WHERE sync_id=".(int) $sync_id );
         $this->db->query("DELETE FROM " . DB_PREFIX . "iss_sync_entries WHERE sync_id=".(int) $sync_id );
     }
-    public function updateParserConfig($sync_id){
-    	$sql="SELECT sync_parser_name FROM " . DB_PREFIX . "iss_sync_list WHERE sync_id='$sync_id'";
-    	$parser_id=$this->db->query($sql)->row['sync_parser_name'];
-    	if( $parser_id && $sync_id ){
-    	    $parser_object=$this->parser_registry[$parser_id];
-    	    $parser_config= json_encode($parser_object, JSON_UNESCAPED_UNICODE);
-    	    $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_list SET sync_config='$parser_config' WHERE sync_id='$sync_id'");
+    
+    public function updateSync( $sync_id, $sync_name, $parser_config ){
+    	if( $sync_id ){
+    	    $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_list SET sync_name='$sync_name',sync_config='$parser_config' WHERE sync_id='$sync_id'");
     	}
     }
+    
     public function getParserList(){
         $directory = str_replace("\\", "/", __DIR__.'/parsers/');
 	$parsers = array_diff(scandir($directory), array('..', '.'));
@@ -142,16 +150,6 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
         }
         return $allowed_parsers;
     }
-    public function getSyncList ($user_id){
-        $where="";
-        if( $user_id ){
-            $where=" WHERE user_id='$user_id'";
-        }
-        $sql="SELECT * FROM " . DB_PREFIX . "iss_sync_list $where";
-        return $this->db->query($sql)->rows;
-    }
-
-
     public function getCategoryList($filter_data) {
 
 	$where = "WHERE sync_id = '{$filter_data['sync_id']}'";
@@ -222,7 +220,6 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
     }
         
     public function updateDb(){
-        
 	$result=$this->db->query("SELECT value FROM ".DB_PREFIX."setting WHERE `key`='iss_bulksync_db_applied_patches'");
 	$db_applied_patches=$result->row?$result->row['value']:'';
         $directory = str_replace("\\", "/", __DIR__.'/db_update/');

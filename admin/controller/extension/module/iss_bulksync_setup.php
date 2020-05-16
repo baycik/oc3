@@ -93,8 +93,18 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
             echo "No sync selected";
             return;
         }
-        $seller_id = $this->customer->getId();
         $this->load->model('extension/module/iss_bulksync/setup');
-        $this->model_extension_module_iss_bulksync_setup->deleteParser($seller_id,$sync_id);
+        $this->model_extension_module_iss_bulksync_setup->deleteSync( $sync_id );
+    }
+    
+    public function syncConfigGet(){
+        $sync_id = $this->request->request['sync_id'];
+        if( !$sync_id ){
+            echo "No sync selected";
+            return;
+        }
+        $this->load->model('extension/module/iss_bulksync/setup');
+        $sync=$this->model_extension_module_iss_bulksync_setup->getSyncList( $sync_id );
+        echo "{\"sync_name\":\"{$sync[0]['sync_name']}\",\"sync_config\":{$sync[0]['sync_config']}}";
     }
 }

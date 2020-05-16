@@ -56,7 +56,7 @@
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_add_parser_title }}</h3>
             </div>
             <div class="panel-body">
-            <form action="index.php?route=extension/module/iss_bulksync_parserlist/addparser&user_token={{ user_token }}" method="post">
+            <form action="index.php?route=extension/module/iss_bulksync_setup/addparser&user_token={{ user_token }}" method="post">
                 <input type="hidden" name="parser_id">
                 {% for parser_id, parser_name in parser_list %}
                     <button class="btn btn-primary" onclick="$('input[name=parser_id]').val('{{parser_id}}')">
@@ -96,6 +96,34 @@
                 </div>
              {% endif %}
              <div class="panel-body">
+                 
+                 
+                 
+            <!-- SELECTOR FORM -->
+            <form id="iss_selector_form">
+                <div class="well">
+                    <h2>Source settings</h2>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Source Name: </label>
+                                <input class="form-control" name="source_name" placeholder="Source Name">
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Source Language: </label>
+                                <select class="form-control" name="source_language" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            
+                        </div>
+                    </div>
+                </div>
+                 
                 <div class="well">
                     <h2>Grouping</h2>
                     <div class="row">
@@ -125,8 +153,9 @@
                         </div>
                     </div>
                 </div>
+                                
                 <div class="well">
-                    <h2>Product basic info</h2>
+                    <h2>Product general info</h2>
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
@@ -153,15 +182,563 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Barcode (EAN): </label>
+                                <select class="form-control" name="ean" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Manufacturer: </label>
+                                <select class="form-control" name="manufacturer" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Min order size: </label>
+                                <select class="form-control" name="min_order_size" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Manufacturer product number (MPN): </label>
+                                <select class="form-control" name="mpn" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Weight: </label>
+                                <select class="form-control" name="weight" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                </form>
-             </div>
-             </div>
-            {{ content_bottom }}</div>
-        {{ column_right }}</div>
+                <div class="well">
+                    <h2>Product Data</h2>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Price: </label>
+                                <select class="form-control" name="price" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Stock count: </label>
+                                <select class="form-control" name="stock_count" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Stock status: </label>
+                                <select class="form-control" name="stock_status" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                
+                <div class="well">
+                    <h2>Images</h2>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Image handling: </label>
+                                <select class="form-control" name="image_handling" >
+                                    <option value="use" selected>Use as filename</option>
+                                    <option value="load">Load from url</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Main image: </label>
+                                <select class="form-control" name="image" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Additional Image 1: </label>
+                                <select class="form-control" name="image1" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Additional Image 2: </label>
+                                <select class="form-control" name="image2" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Additional Image 3: </label>
+                                <select class="form-control" name="image3" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Additional Image 4: </label>
+                                <select class="form-control" name="image4" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label>Additional Image 5: </label>
+                                <select class="form-control" name="image5" >
+                                    {{ source_column_options }}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                
+                <div class="well">
+                    <h2>Options</h2>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Option 1:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="option1_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="option1_label" placeholder="Option name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="option1" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Option 2:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="option2_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="option2_label" placeholder="Option name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="option2" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Option 3:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="option3_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="option3_label" placeholder="Option name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="option3" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                                
+                <div class="well">
+                    <h2>Attributes</h2>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 1:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute1_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute1_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute1" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 2:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute2_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute2_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute2" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 3:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute3_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute3_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute3" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                                        
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 4:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute4_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute4_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute4" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 5:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute5_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute5_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute5" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 6:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute6_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute6_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute6" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 7:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute7_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute7_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute7" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 8:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute8_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute8_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute8" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 9:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute9_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute9_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute9" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 10:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute10_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute10_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute10" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 11:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute11_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute11_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute11" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <label>Attribute 12:</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                         <input type="checkbox" name="attribute12_infilter" class="form-control" style="display:inline-block"> in filter
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control" name="attribute12_label" placeholder="Attribute name">
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <select class="form-control" name="attribute12" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>  
+            </form>
+        </div>
+    </div>
+{{ content_bottom }}
+</div>
+{{ column_right }}
+</div>
 </div>
 <script type="text/javascript">
-    function adjustActionButtons(){
+Setup={
+    init:function (){
+        Setup.adjustActionButtons();
+        Setup.adjustActions();
+        Setup.selectorForm.load();
+    },
+    sync_id:0,
+    user_token:'{{ user_token }}',
+
+    selectorForm:{
+        collect:function(){
+            
+        },
+        set:function(config){
+            var fvalue={};
+            for(var attribute of config.attributes ){
+                fvalue[attribute.field]=
+            }
+            
+            
+            
+            
+            
+            
+            var fquery="#iss_selector_form";
+            fvalue=fvalue||{};
+            $(fquery + " input," + fquery + " textarea," + fquery + " select").each(function (i, element) {
+                var value=fvalue[element.name];
+                $(element).val(value);
+                if ($(element).attr('type') === 'checkbox' && fvalue[element.name] * 1) {
+                    $(element).attr('checked', 'checked');
+                }
+            });            
+        },
+        load:function(){
+            if( !Setup.sync_id ){
+                return;
+            }
+            var request={
+                route:'extension/module/iss_bulksync_setup/syncConfigGet',
+                sync_id:Setup.sync_id,
+                user_token:Setup.user_token
+            };
+            $.get("./",request,function(resp){
+                try{
+                    var fvalue=JSON.parse(resp);
+                    Setup.selectorForm.set(fvalue);
+                } catch(e){
+                    console.log(e);
+                }
+            });
+        },
+        save:function(){
+            
+        }
+    },
+
+    adjustActionButtons:function (){
         var parser_name = $('#form-parse select').find('option[value='+$('#form-parse select').val()+']').data('parser_name');
         if(parser_name && parser_name.indexOf('{{text_import_table}}')>-1 ){ 
             var upload_label=`<i class="fa fa-upload"></i> ${parser_name}`;
@@ -172,98 +749,102 @@
             $(".btn.btn-download-positive").show().html(download_label);
             $(".btn.btn-upload-positive").hide();
         }
-    }
-    $(document).on('ready', adjustActionButtons);
-    $('#form-parse select').on('change', adjustActionButtons);
-    
-    $("#form-parse .btn-danger").click(function(){
-        if( confirm("{{text_delete_parser}}") ){
-            var sync_id = $('#form-parse select').val();
-            $.post('index.php?route=extension/module/iss_bulksync_parserlist/deleteparser&user_token={{ user_token }}', {sync_id: sync_id}, function (ok) {
-                location.reload();
-            });
-        }
-    });
-    
-    $("#form-parse .btn-secondary").click(function(){
-	var sync_id = $('#form-parse select').val();
-	location = 'index.php?route=extension/module/iss_bulksync_import&sync_id='+sync_id+'&user_token={{ user_token }}';
-    });
+    },
 
-    var syncing_in_progress=false;
-    $("#form-parse").on('submit', function (e) {
-        var sync_id = $(this).find('select').val();
-        if( syncing_in_progress || !sync_id ){
-            return;
-        }
-        syncing_in_progress=true;
-        $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parsing}}');
-        e.preventDefault();
-        $.post('index.php?route=extension/module/iss_bulksync_parserlist/startParsing&user_token={{ user_token }}', {sync_id: sync_id}, function (ok) {
-            syncing_in_progress=false
-            if (ok*1) {
-                alert('{{text_loading_completed}}');
-                $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
-                location = 'index.php?route=extension/aruna/sellersync&sync_id='+sync_id+'&user_token={{ user_token }}';
-            } else {
-                $("#form-parse .btn-download-positive").html('{{button_parse}}');
-                alert("Error occured: "+ok);
-            }
-        });
-    });
-    
-    $('button.btn-upload-positive').on('click', function() {
-	var element = this;
-	$('#form-upload').remove();
-	$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
-	$('#form-upload input[name=\'file\']').trigger('click');
-	if (typeof timer != 'undefined') {
-            clearInterval(timer);
-	}
-	timer = setInterval(function() {
-            if ($('#form-upload input[name=\'file\']').val() != '') {
-                clearInterval(timer);
-                $.ajax({
-                    url: 'index.php?route=tool/upload/upload&user_token={{ user_token }}',
-                    type: 'post',
-                    dataType: 'json',
-                    data: new FormData($('#form-upload')[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function() {
-                        $(element).button('loading');
-                    },
-                    complete: function() {
-                        $(element).button('reset');
-                    },
-                    success: function(json) {
-                        $(element).parent().find('.text-danger').remove();
-                        if (json['error']) {
-                            $(element).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
-                        }
-                        if (json['success']) {
-                            var sync_id = $("#form-parse").find('select').val();
-                            $(element).parent().find('input').val(json['code']);
-                            $.post('index.php?route=extension/module/iss_bulksync_parserlist/startParsing&user_token={{ user_token }}', {sync_id: sync_id, code: json['code']}, function (ok) {
-                                syncing_in_progress=false;
-                                if (ok*1) {
-                                    alert('{{ text_loading_completed }}');
-                                    $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
-                                    location = 'index.php?route=extension/module/iss_bulksync_parserlist&sync_id='+sync_id+'&user_token={{ user_token }}';
-                                } else {
-                                    $("#form-parse .btn-download-positive").html('{{button_parse}}');
-                                    alert("{{ text_error_while_parsing }}: "+ok);
-                                }
-                            });
-                        }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
-                    }
+    adjustActions:function (){
+        Setup.sync_id = $('#form-parse select').val();
+        $('#form-parse select').on('change', Setup.adjustActionButtons);
+        $("#form-parse .btn-danger").click(function(){
+            if( confirm("{{text_delete_parser}}") ){
+                Setup.sync_id = $('#form-parse select').val();
+                $.post('index.php?route=extension/module/iss_bulksync_setup/deleteparser&user_token={{ user_token }}', {sync_id: Setup.sync_id}, function (ok) {
+                    location.reload();
                 });
             }
-	}, 500);
-     });
+        });
+
+        $("#form-parse .btn-secondary").click(function(){
+            Setup.sync_id = $('#form-parse select').val();
+            location = 'index.php?route=extension/module/iss_bulksync_import&sync_id='+Setup.sync_id+'&user_token={{ user_token }}';
+        });
+
+        var syncing_in_progress=false;
+        $("#form-parse").on('submit', function (e) {
+            Setup.sync_id = $(this).find('select').val();
+            if( syncing_in_progress || !Setup.sync_id ){
+                return;
+            }
+            syncing_in_progress=true;
+            $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parsing}}');
+            e.preventDefault();
+            $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&user_token={{ user_token }}', {sync_id: Setup.sync_id}, function (ok) {
+                syncing_in_progress=false
+                if (ok*1) {
+                    alert('{{text_loading_completed}}');
+                    $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
+                    location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id='+Setup.sync_id+'&user_token={{ user_token }}';
+                } else {
+                    $("#form-parse .btn-download-positive").html('{{button_parse}}');
+                    alert("Error occured: "+ok);
+                }
+            });
+        });
+
+        $('button.btn-upload-positive').on('click', function() {
+            var element = this;
+            $('#form-upload').remove();
+            $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+            $('#form-upload input[name=\'file\']').trigger('click');
+            if (typeof timer != 'undefined') {
+                clearInterval(timer);
+            }
+            timer = setInterval(function() {
+                if ($('#form-upload input[name=\'file\']').val() != '') {
+                    clearInterval(timer);
+                    $.ajax({
+                        url: 'index.php?route=tool/upload/upload&user_token={{ user_token }}',
+                        type: 'post',
+                        dataType: 'json',
+                        data: new FormData($('#form-upload')[0]),
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function() {
+                            $(element).button('loading');
+                        },
+                        complete: function() {
+                            $(element).button('reset');
+                        },
+                        success: function(json) {
+                            $(element).parent().find('.text-danger').remove();
+                            if (json['error']) {
+                                $(element).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
+                            }
+                            if (json['success']) {
+                                Setup.sync_id = $("#form-parse").find('select').val();
+                                $(element).parent().find('input').val(json['code']);
+                                $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&user_token={{ user_token }}', {sync_id: sync_id, code: json['code']}, function (ok) {
+                                    syncing_in_progress=false;
+                                    if (ok*1) {
+                                        alert('{{ text_loading_completed }}');
+                                        $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
+                                        location = 'index.php?route=extension/module/iss_bulksync_setup&sync_id='+Setup.sync_id+'&user_token={{ user_token }}';
+                                    } else {
+                                        $("#form-parse .btn-download-positive").html('{{button_parse}}');
+                                        alert("{{ text_error_while_parsing }}: "+ok);
+                                    }
+                                });
+                            }
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        }
+                    });
+                }
+            }, 500);
+         })
+    }
+};
+$(document).on('ready', Setup.init);
 </script>
 {{ footer }}
