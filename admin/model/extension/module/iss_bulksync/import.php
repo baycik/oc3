@@ -2,12 +2,11 @@
 
 class ModelExtensionModuleIssBulksyncImport extends Model {
    private $sync_id;
-   private $meta_keyword_prefix="META KEYWORD - ";
-   private $meta_description_prefix="META DESCRIPTION - ";
+   private $meta_keyword_prefix="";
+   private $meta_description_prefix="";
     
     public function __construct($registry) {
         parent::__construct($registry);
-        $this->language_id = (int) $this->config->get('config_language_id');
         $this->start = microtime(1);
         $this->load->model('extension/module/iss_bulksync/product');
     }
@@ -18,6 +17,9 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             return false;
         }
         $this->sync_config = json_decode($result->row['sync_config'], false, 512, JSON_UNESCAPED_UNICODE);
+        $this->language_id=$this->sync_config->source_language;
+        //$this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
+        //$this->meta_description_prefix=$this->sync_config->meta_description_prefix;
         //header("content-type:text/plain");print_r($this->sync_config);
     }
 
@@ -78,7 +80,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             FROM
                 " . DB_PREFIX . "iss_sync_entries AS bse
             WHERE
-                is_changed
+                is_changed 
                 AND category_lvl1 = '{$group_data['category_lvl1']}'
                 AND category_lvl2 = '{$group_data['category_lvl2']}'
                 AND category_lvl3 = '{$group_data['category_lvl3']}'
@@ -87,22 +89,17 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         $rows = $this->db->query($sql)->rows;
         
         
-        $this->profile("select entries");
+        $this->profile("select entries count:".count($rows));
         if (!count($rows)) {
             return 1;
         } 
         foreach ($rows as $row) {
             $product = $this->composeProductObject($row, $group_data['comission'], $group_data['retail_comission'], $group_data['destination_categories']);
-            
-            //header("content-type:text/plain");print_r($product);die;
-            if (!empty($row['product_id'])) {
-                $product_ids= explode(',', $row['product_id']);
-                foreach($product_ids as $product_id){
-                    $product['product_id'] = $product_id;
-                    $this->productUpdate($product);
-                }
-            } else {
+            //header("content-type:text/plain");print_r($product);//die;
+            if ( empty($row['product_id']) ) {
                 $this->productAdd($product);
+            } else {    
+                $this->productUpdate($product);
             }
             $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_entries SET is_changed=0 WHERE sync_entry_id='{$row['sync_entry_id']}'");
         }
@@ -555,7 +552,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         //DESCRIPTION SECTION
         ////////////////////////////////
         $row['description'] = preg_replace('/{{\w+}}/', '', $row['description']);
-        $product_description[$this->sync_config->language_id] = [
+        $product_description[$this->language_id] = [
             'name' => $row['product_name'],
             'description' => $row['description'],
             'meta_title' => strip_tags($row['product_name']. ' ' . $row['manufacturer']),
@@ -572,6 +569,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             $sort_order = 1700000000 - time();//new products sort to start
         }
         $product = [
+            'product_id'=>$row['product_id'],
             'model' => $row['model'],
             'sku' => '',
             'upc' => '',
@@ -587,9 +585,9 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'points' => 0,
             'weight' => 0,
             'weight_class_id' => 0,
-            'length' => 0,
-            'width' => 0,
-            'height' => 0,
+            'length' => $row['length'],
+            'width' => $row['width'],
+            'height' => $row['height'],
             'length_class_id' => 0,
             'tax_class_id' => 0,
             'sort_order' => $sort_order,

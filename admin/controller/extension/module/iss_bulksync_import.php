@@ -29,8 +29,8 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
 	);
         
         $data['breadcrumbs'][] = array(
-	    'text' => $this->language->get('heading_title_parserlist'),
-	    'href' => $this->url->link('extension/module/iss_bulksync_parserlist', $url, true)
+	    'text' => $this->language->get('heading_title_setup'),
+	    'href' => $this->url->link('extension/module/iss_bulksync_setup', $url, true)
 	);
         
 	$data['breadcrumbs'][] = array(
@@ -38,7 +38,7 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
 	    'href' => $this->url->link('extension/module/iss_bulksync_import', $url, true)
 	);
 
-        $data['back_link']=$this->url->link('extension/module/iss_bulksync_parserlist', $url, true);
+        $data['back_link']=$this->url->link('extension/module/iss_bulksync_setup', $url, true);
         
 	if (isset($this->request->get['sort'])) {
 	    $sort = $this->request->get['sort'];
@@ -65,7 +65,7 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
 	}
         //$url .= '&page=' . $page;
         $this->load->model('extension/module/iss_bulksync/parse');
-	$data['back'] = $this->url->link('extension/module/iss_bulksync_parserlist', 'user_token=' . $this->session->data['user_token'], true);
+	$data['back'] = $this->url->link('extension/module/iss_bulksync_setup', 'user_token=' . $this->session->data['user_token'], true);
 	$data['sort'] = $sort;
 	$data['order'] = $order;
 	$data['heading_title'] = $this->language->get('heading_title');

@@ -35,6 +35,10 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
 	$data['footer'] = $this->load->controller('common/footer');
 	$data['header'] = $this->load->controller('common/header');
 	$data['user_id'] = $user_id;
+        
+        
+        $this->load->model('localisation/language');
+        $data['language_list']=$this->model_localisation_language->getLanguages();
         $data['source_column_options']=$this->getColumnNumbers();
         
 	$this->load->model('extension/module/iss_bulksync/setup');
@@ -46,10 +50,13 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
     }
     
     private function getColumnNumbers(){
-        $options="<option value='-'>-</option>";
-        foreach( range('A', 'Z') as $i=>$lett) {
-            $num=$i+1;
-            $options.="<option value='$num-$lett'>$num-$lett</option>";
+        $options="<option value=''>-</option>";
+        $num=0;
+        foreach( ['', 'A'] as $lett1){
+            foreach( range('A', 'Z') as $lett2) {
+                $num++;
+                $options.="<option value='$num'>$num-{$lett1}{$lett2}</option>";
+            }
         }
         return $options;
     }
@@ -58,32 +65,37 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         if( isset($this->request->post['code']) ){
             $_FILES[0] = $this->request->post['code'];
         }
-        
         $sync_id = $this->request->post['sync_id'];
         if( !$sync_id ){
             echo "Source hasn't been selected";
-            return;
+            return false;
         }
-        
-        if( !isset($this->request->post['code']) ){
-            $this->load->model('extension/module/iss_bulksync/setup');
-            echo $this->model_extension_module_iss_bulksync_setup->updateParserConfig($sync_id);
+        $this->load->model('extension/module/iss_bulksync/setup');
+        $sync_list=$this->model_extension_module_iss_bulksync_setup->getSyncList($sync_id);
+        if( $sync_list[0] ){
+            $sync=$sync_list[0];
+            $sync['sync_config']=json_decode($sync['sync_config']);
+            $sync_parser_name=$sync['sync_parser_name'];
+            $this->load->model("extension/module/iss_bulksync/parsers/$sync_parser_name");
+            echo $this->{"model_extension_module_iss_bulksync_parsers_".$sync_parser_name}->initParser($sync_id);
         }
+//        if( !isset($this->request->post['code']) ){
+//            $this->load->model('extension/module/iss_bulksync/setup');
+//            echo $this->model_extension_module_iss_bulksync_setup->updateParserConfig($sync_id);
+//        }
         
-        $this->load->model('extension/module/iss_bulksync/parse');
-        echo $this->model_extension_module_iss_bulksync_parse->initParser($sync_id,'update_all_entries');
     }
     
        
     public function addParser(){
-        $parser_id = $this->request->post['parser_id'];
-        if( !$parser_id ){
+        $sync_parser_name = $this->request->post['sync_parser_name'];
+        $sync_name = $this->request->post['sync_name'];
+        if( !$sync_parser_name ){
             echo "No parser selected";
             return;
         }
-        $seller_id = $this->customer->getId();
         $this->load->model('extension/module/iss_bulksync/setup');
-        $this->model_extension_module_iss_bulksync_setup->addParser($seller_id,$parser_id);
+        $this->model_extension_module_iss_bulksync_setup->addParser($sync_parser_name,$sync_name);
         $this->response->redirect($this->url->link('extension/module/iss_bulksync_setup', 'user_token=' . $this->session->data['user_token'], true));
     }
     
@@ -105,6 +117,25 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         }
         $this->load->model('extension/module/iss_bulksync/setup');
         $sync=$this->model_extension_module_iss_bulksync_setup->getSyncList( $sync_id );
-        echo "{\"sync_name\":\"{$sync[0]['sync_name']}\",\"sync_config\":{$sync[0]['sync_config']}}";
+        if( isset($sync[0]) && $sync[0]['sync_config'] ){
+            echo "{\"sync_name\":\"{$sync[0]['sync_name']}\",\"sync_config\":{$sync[0]['sync_config']}}";
+            exit;
+        }
+        echo "{\"sync_name\":\"\",\"sync_config\":\"\"}";
+        //header("Content-type:text/json");
+        //echo json_encode(json_decode("{\"sync_name\":\"{$sync[0]['sync_name']}\",\"sync_config\":{$sync[0]['sync_config']}}"),JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+        
+    }
+    public function syncConfigSave(){
+        $config_json = $this->request->post['config'];
+        $sync_id = $this->request->post['sync_id'];
+        if( empty($config_json) ){
+            echo "No config supplied";
+            return;
+        }
+        $config= json_decode( html_entity_decode ($config_json) );
+        $sync_name=$config->sync_name;
+        $this->load->model('extension/module/iss_bulksync/setup');
+        echo $this->model_extension_module_iss_bulksync_setup->updateSync( $sync_id, $sync_name, $config->sync_config );
     }
 }
