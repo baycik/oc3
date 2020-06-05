@@ -9,7 +9,7 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
     }
 
     public function addParser($sync_parser_name, $sync_name) {
-        $this->db->query("INSERT INTO " . DB_PREFIX . "iss_sync_list SET sync_parser_name='{$sync_parser_name}', sync_name='{$sync_name}',sync_config=''");
+        $this->db->query("INSERT INTO iss_sync_list SET sync_parser_name='{$sync_parser_name}', sync_name='{$sync_name}',sync_config=''");
     }
     
     public function getSyncList($sync_id = 0) {
@@ -17,20 +17,20 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
         if ($sync_id) {
             $where = " WHERE sync_id='$sync_id'";
         }
-        $sql = "SELECT * FROM " . DB_PREFIX . "iss_sync_list $where";
+        $sql = "SELECT * FROM iss_sync_list $where";
         return $this->db->query($sql)->rows;
     }
 
     public function deleteSync($sync_id) {
-        $this->db->query("DELETE FROM " . DB_PREFIX . "iss_sync_list WHERE sync_id=" . (int) $sync_id);
-        $this->db->query("DELETE FROM " . DB_PREFIX . "iss_sync_groups WHERE sync_id=" . (int) $sync_id);
-        $this->db->query("DELETE FROM " . DB_PREFIX . "iss_sync_entries WHERE sync_id=" . (int) $sync_id);
+        $this->db->query("DELETE FROM iss_sync_list WHERE sync_id=" . (int) $sync_id);
+        $this->db->query("DELETE FROM iss_sync_groups WHERE sync_id=" . (int) $sync_id);
+        $this->db->query("DELETE FROM iss_sync_entries WHERE sync_id=" . (int) $sync_id);
     }
 
     public function updateSync($sync_id, $sync_name, $config) {
         if ($sync_id) {
             $parser_config = json_encode($config,JSON_UNESCAPED_UNICODE);
-            $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_list SET sync_name='$sync_name',sync_config='$parser_config' WHERE sync_id='$sync_id'");
+            $this->db->query("UPDATE iss_sync_list SET sync_name='$sync_name',sync_config='$parser_config' WHERE sync_id='$sync_id'");
             return true;
         }
         return false;
@@ -64,7 +64,7 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
         }
         $sql = "
                 SELECT * FROM 
-                    " . DB_PREFIX . "iss_sync_groups
+                    iss_sync_groups
                 $where
                 $order
                 $limit
@@ -81,7 +81,7 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
         $sql = "SELECT 
 		COUNT(*) AS num 
 	    FROM 
-               " . DB_PREFIX . "iss_sync_groups  
+               iss_sync_groups  
             $where
             ORDER BY category_lvl1,category_lvl2,category_lvl3";
         $row = $this->db->query($sql);
@@ -90,8 +90,8 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
 
     public function saveCategoryPrefs($data) {
         $this->db->query("
-            UPDATE " . DB_PREFIX . "iss_sync_entries se
-                JOIN " . DB_PREFIX . "iss_sync_groups sg ON 
+            UPDATE iss_sync_entries se
+                JOIN iss_sync_groups sg ON 
                     se.category_lvl1 = sg.category_lvl1 
                     AND se.category_lvl2 = sg.category_lvl2 
                     AND se.category_lvl3 = sg.category_lvl3 
@@ -101,7 +101,7 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
                 sg.group_id = " . (int) $data['group_id']);
         $sql = "
             UPDATE 
-             " . DB_PREFIX . "iss_sync_groups
+             iss_sync_groups
             SET
                 comission = " . (float) $data['category_comission'] . ",
                 destination_categories = '" . $data['destination_categories'] . "'

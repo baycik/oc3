@@ -12,7 +12,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
     }
     
     private function loadImportConfig(){
-        $result = $this->db->query("SELECT sync_config FROM " . DB_PREFIX . "iss_sync_list WHERE sync_id='$this->sync_id'");
+        $result = $this->db->query("SELECT sync_config FROM iss_sync_list WHERE sync_id='$this->sync_id'");
         if (!$result->row || !$result->row['sync_config']) {
             return false;
         }
@@ -46,7 +46,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
                 (retail_comission+100)/100 retail_comission,
                 destination_categories
             FROM
-               " . DB_PREFIX . "iss_sync_groups
+               iss_sync_groups
             WHERE
                 destination_categories IS NOT NULL
                 AND destination_categories != '0'
@@ -77,7 +77,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
                 bse.*,
 		(SELECT product_id FROM " . DB_PREFIX . "product p WHERE p.model=bse.model LIMIT 1) AS product_id
             FROM
-                " . DB_PREFIX . "iss_sync_entries AS bse
+                iss_sync_entries AS bse
             WHERE
                 is_changed AND 
                 category_lvl1 = '{$group_data['category_lvl1']}'
@@ -100,7 +100,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             } else {    
                 $this->productUpdate($product);
             }
-            $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_entries SET is_changed=0 WHERE sync_entry_id='{$row['sync_entry_id']}'");
+            $this->db->query("UPDATE iss_sync_entries SET is_changed=0 WHERE sync_entry_id='{$row['sync_entry_id']}'");
         }
         $this->profile("import entries");
         $this->assignFiltersToCategory($product['product_category']);
@@ -131,9 +131,9 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
 		FROM
 		    " . DB_PREFIX . "product p
 			LEFT JOIN
-		    " . DB_PREFIX . "iss_sync_entries bse USING(model)
+		    iss_sync_entries bse USING(model)
 			LEFT JOIN
-		    " . DB_PREFIX . "iss_sync_groups AS bsg USING(category_lvl1,category_lvl2,category_lvl3)
+		    iss_sync_groups AS bsg USING(category_lvl1,category_lvl2,category_lvl3)
 		WHERE
 		    bse.sync_id IS NULL
 		    OR destination_categories = ''
@@ -715,7 +715,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
                 group_id,
                 destination_categories
             FROM
-               " . DB_PREFIX . "iss_sync_groups
+               iss_sync_groups
             WHERE
                 destination_categories IS NOT NULL
                 AND destination_categories != '0'

@@ -12,7 +12,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
 
     public function initParser($sync_id) {
         set_time_limit(300);
-        $sync_list_entry = $this->db->query("SELECT * FROM " . DB_PREFIX . "iss_sync_list WHERE sync_id='$sync_id'")->row;
+        $sync_list_entry = $this->db->query("SELECT * FROM iss_sync_list WHERE sync_id='$sync_id'")->row;
         if (!$sync_list_entry) {
             return false;
         }
@@ -20,7 +20,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         $this->prepare_parsing($sync_id, $this->sync_config->parsing_mode);
         if ($this->parse($sync_list_entry)) {
             $this->finish_parsing($sync_id, $this->sync_config->parsing_mode);
-            $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_list SET sync_last_started=NOW() WHERE sync_id='{$sync_list_entry['sync_id']}'");
+            $this->db->query("UPDATE iss_sync_list SET sync_last_started=NOW() WHERE sync_id='{$sync_list_entry['sync_id']}'");
             return true;
         } else {
             die('Error while parsing !');
@@ -39,21 +39,21 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
 
     private function prepare_parsing($sync_id, $mode) {
         $this->db->query("DROP TEMPORARY TABLE IF EXISTS iss_tmp_previous_sync"); #TEMPORARY
-        $this->db->query("CREATE TEMPORARY TABLE iss_tmp_previous_sync AS (SELECT * FROM " . DB_PREFIX . "iss_sync_entries WHERE sync_id='$sync_id')");
+        $this->db->query("CREATE TEMPORARY TABLE iss_tmp_previous_sync AS (SELECT * FROM iss_sync_entries WHERE sync_id='$sync_id')");
 
         $this->db->query("DROP TEMPORARY TABLE IF EXISTS iss_tmp_current_sync"); #TEMPORARY
-        $this->db->query("CREATE TEMPORARY TABLE iss_tmp_current_sync LIKE " . DB_PREFIX . "iss_sync_entries");
+        $this->db->query("CREATE TEMPORARY TABLE iss_tmp_current_sync LIKE iss_sync_entries");
 //
 //        if ($mode == 'partial_parse') {
-//            $this->db->query("INSERT INTO iss_tmp_current_sync SELECT * FROM " . DB_PREFIX . "iss_sync_entries");
+//            $this->db->query("INSERT INTO iss_tmp_current_sync SELECT * FROM iss_sync_entries");
 //        }
     }
 
     private function finish_parsing($sync_id, $mode) {
-        $clear_previous_sync_sql = "DELETE FROM " . DB_PREFIX . "iss_sync_entries WHERE sync_id = '$sync_id'";
+        $clear_previous_sync_sql = "DELETE FROM iss_sync_entries WHERE sync_id = '$sync_id'";
         $this->db->query($clear_previous_sync_sql);
         
-        $fields=$this->db->query("SHOW COLUMNS FROM " . DB_PREFIX . "iss_sync_entries");
+        $fields=$this->db->query("SHOW COLUMNS FROM iss_sync_entries");
         $insert_fields='';
         $select_fields='';
         $delimiter='';
@@ -76,7 +76,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         }
         $fill_entries_table_sql = "
             INSERT INTO 
-                " . DB_PREFIX . "iss_sync_entries 
+                iss_sync_entries 
                     ($insert_fields)
                 SELECT 
                     $select_fields
@@ -88,7 +88,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         if ($mode == 'detect_unchanged_entries') {
             $change_finder_sql = "
                 UPDATE
-                    " . DB_PREFIX . "iss_sync_entries bse
+                    iss_sync_entries bse
                         JOIN
                     iss_tmp_previous_sync bps USING (`sync_id` , `category_lvl1` , `category_lvl2` , `category_lvl3` , `product_name` , `model` , `ean` , `mpn` , `description` , `min_order_size` , `stock_count` , `stock_status` , `manufacturer` , `attribute1` , `attribute2` , `attribute3` , `attribute4` , `attribute5` , `attribute6` , `attribute7` , `attribute8` , `attribute9` , `attribute10`, `attribute11`, `attribute12` ,`attribute_group`, `option1` , `option2` , `option3` , `image` , `image1` , `image2` , `image3` , `image4` , `image5` , `price1` , `price2` , `price3` , `price4`)
                 SET
@@ -100,7 +100,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
 
     public function addSync($seller_id, $sync_source) {
         $sql = "
-            INSERT INTO " . DB_PREFIX . "iss_sync_list
+            INSERT INTO iss_sync_list
                 seller_id, sync_source,sync_comission,sync_last_improted
             ON DUPLICATE KEY UPDATE  
                 seller_id = $seller_id,
@@ -117,7 +117,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         }
         $presql = "
             UPDATE 
-                " . DB_PREFIX . "iss_sync_groups
+                iss_sync_groups
             SET 
                 total_products = 0 
             WHERE 
@@ -126,12 +126,12 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         $this->db->query($presql);
         $sql = "
             INSERT INTO
-                " . DB_PREFIX . "iss_sync_groups ( sync_id, category_lvl1, category_lvl2, category_lvl3, category_path, total_products )
+                iss_sync_groups ( sync_id, category_lvl1, category_lvl2, category_lvl3, category_path, total_products )
             SELECT * FROM
                 (SELECT 
                     sync_id, category_lvl1, category_lvl2, category_lvl3, CONCAT(category_lvl1,'/',category_lvl2 , '/' , category_lvl3), COUNT(model) AS tp
                 FROM 	
-                    " . DB_PREFIX . "iss_sync_entries AS bse    
+                    iss_sync_entries AS bse    
                 WHERE bse.sync_id = '$sync_id'
                 GROUP BY bse.category_lvl1, bse.category_lvl2, bse.category_lvl3) h
             ON DUPLICATE KEY UPDATE  total_products = tp
@@ -139,7 +139,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         $this->db->query($sql);
         $clear_empty = "
           DELETE FROM
-              " . DB_PREFIX . "iss_sync_groups
+              iss_sync_groups
           WHERE 
               sync_id='$sync_id' AND total_products=0 
               AND ( destination_categories IS NULL OR NOT destination_categories );
