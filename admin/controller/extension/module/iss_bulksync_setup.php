@@ -22,7 +22,7 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         );
 
 	$data['breadcrumbs'][] = array(
-	    'text' => $this->language->get('heading_title'),
+	    'text' => $this->language->get('heading_title_parser'),
 	    'href' => $this->url->link('extension/module/iss_bulksync_setup', $url, true)
 	);
         $user_id = $this->customer->getId();
@@ -96,6 +96,9 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         }
         $this->load->model('extension/module/iss_bulksync/setup');
         $this->model_extension_module_iss_bulksync_setup->addParser($sync_parser_name,$sync_name);
+        
+        $this->load->model("extension/module/iss_bulksync/parsers/$sync_parser_name");
+        $this->{"model_extension_module_iss_bulksync_parsers_".$sync_parser_name}->install();
         $this->response->redirect($this->url->link('extension/module/iss_bulksync_setup', 'user_token=' . $this->session->data['user_token'], true));
     }
     

@@ -1,7 +1,7 @@
 <?php		
 // Heading		
-$_['heading_title']                =	"BulkSync Import";
-$_['heading_title_parserlist']     =	"BulkSync Source list";
+$_['heading_title']                =	"IsellSoft Bulksync List";
+$_['heading_title_setup']          =	"BulkSync Source list";
 $_['heading_title_import']         =	"Import";
 
 		
@@ -23,8 +23,9 @@ $_['text_import_progress']      =	"Working on import. Products left: ";
 $_['text_import_finished']      =	"Import is finished successfully!";
 $_['text_import_failed']        =	"Import is failed!";
 $_['text_delete_absent']        =	"Deleting absent products";
-$_['text_save_setting_failed']        =	"Settings save failed!";
-$_['text_input_category']       =	"Filter by product group...";
+$_['text_save_setting_failed']  =	"Settings save failed!";
+$_['text_filter_group']         =	"Filter by product group...";
+$_['text_entry_category']       =       "Type category name";
 $_['text_product_group']        =	"Product Group";
 $_['text_total_products']      	=	"Total Products";
 $_['text_comission']           	=	"Comision";

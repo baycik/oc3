@@ -49,37 +49,48 @@ Setup.selectorForm = {
                 }
                 return true;
             }
-            
             if ( input_type==='label' ) {
                 if( input_field.indexOf('attribute') > -1 ){
+                    var label=$(`input[name=${input_field}-label]`).val();
+                    var attribute_name=label.split('|')[0]||'';
+                    var attribute_group_name=label.split('|')[1]||'';
                     config.sync_config.attributes.push({
                         field:input_field,
-                        name:$(`input[name=${input_field}-label]`).val(),
-                        group_description:''
+                        name:attribute_name,
+                        group_description:attribute_group_name
                     });
                 }
                 if( input_field.indexOf('option') > -1 ){
+                    var label=$(`input[name=${input_field}-label]`).val();
+                    var option_name=label.split('|')[0]||'';
                     config.sync_config.options.push({
                         field:input_field,
-                        name:$(`input[name=${input_field}-label]`).val(),
-                        group_description:''
+                        name:option_name,
+                        value_group_field:'option_group1',
+                        price_group_field:'price_group1',
+                        price_base_field:'price',
+                        option_type:$(`select[name=${input_field}-selectortype]`).val()
                     });
                 }
             } else
             if( input_type==='infilter' ){
                 var label=$(`input[name=${input_field}-label]`).val() || $input.parent().parent().find('label').html().replace(':','');
+                var filter_name=label.split('|')[0]||'';
                 config.sync_config.filters.push({
                     field:input_field,
-                    name:label,
+                    name:filter_name,
+                    group_description:filter_name,
                     delimeter:delimeter
                 });
             } else
             if( input_type==='inattribute' ){
                 var label=$(`input[name=${input_field}-label]`).val() || $input.parent().parent().find('label').html().replace(':','');
+                var attribute_name=label.split('|')[0]||'';
+                var attribute_group_name=label.split('|')[1]||'';
                 config.sync_config.attributes.push({
                     field:input_field,
-                    name:label,
-                    group_description:''
+                    name:attribute_name,
+                    group_description:attribute_group_name
                 });
             } else
             if ( input_type==='source' ) {
@@ -88,9 +99,6 @@ Setup.selectorForm = {
             else {
                 config.sync_config[input_name] = input_value;
             }
-            
-            
-            
         });
         if( !valid ){
             return false;
@@ -118,7 +126,7 @@ Setup.selectorForm = {
         }
         var sync_config = Setup.selectorForm.config.sync_config;
         var fquery = "#iss_selector_form";
-        var fvalue = {};
+        var fvalue = sync_config;
         
         function is_filter(field) {
             for ( var filter of sync_config.filters ) {
@@ -133,17 +141,16 @@ Setup.selectorForm = {
             fvalue[`${target}-source`] = source;
         }
         for (var attribute of sync_config.attributes) {
-            fvalue[`${attribute.field}-label`] = attribute.name || '';
+            var label=attribute.group_description?`${attribute.name}|${attribute.group_description}`:attribute.name;
+            fvalue[`${attribute.field}-label`] = label;
             fvalue[`${attribute.field}-infilter`] = is_filter(attribute.field);
         }
         for (var option of sync_config.options) {
-            fvalue[`${option.field}-label`] = option.name || '';
+            var label=option.group_description?`${option.name}|${option.group_description}`:option.name;
+            fvalue[`${option.field}-label`] = label;
             fvalue[`${option.field}-infilter`] = is_filter(option.field);
+            fvalue[`${option.field}-selectortype`] = option.option_type;
         }
-        fvalue['image_handling']=sync_config.image_handling;
-        fvalue['parsing_mode']=sync_config.parsing_mode;
-        fvalue['sync_name']=Setup.selectorForm.config.sync_name;
-        fvalue['source_language']=sync_config.source_language;
         $(fquery + " input," + fquery + " textarea," + fquery + " select").each(function (i, element) {
             var value = fvalue[element.name];
             $(element).val(value);

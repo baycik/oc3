@@ -31,6 +31,11 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         //Must be overrided by parser class
         return false;
     }
+    
+    public function install(){
+        //May be overrided by parser class if needed
+        return true;
+    }
 
     private function prepare_parsing($sync_id, $mode) {
         $this->db->query("DROP TEMPORARY TABLE IF EXISTS iss_tmp_previous_sync"); #TEMPORARY
@@ -47,14 +52,34 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
     private function finish_parsing($sync_id, $mode) {
         $clear_previous_sync_sql = "DELETE FROM " . DB_PREFIX . "iss_sync_entries WHERE sync_id = '$sync_id'";
         $this->db->query($clear_previous_sync_sql);
+        
+        $fields=$this->db->query("SHOW COLUMNS FROM " . DB_PREFIX . "iss_sync_entries");
+        $insert_fields='';
+        $select_fields='';
+        $delimiter='';
+        foreach( $fields->rows as $field ){
+            $insert_fields.="$delimiter`{$field['Field']}`";
+            if($field['Field']=='option_group1'){
+                $field['Field']="GROUP_CONCAT(option1 SEPARATOR '|') AS `option_group1`";
+            }
+            if($field['Field']=='price_group1'){
+                $field['Field']="GROUP_CONCAT(price1 SEPARATOR '|') AS `price_group1`";
+            }
+            if($field['Field']=='is_changed'){
+                $field['Field']="1";
+            }
+            if($field['Field']=='price'){
+                $field['Field']="MIN(price1) AS `price`";
+            }
+            $select_fields.="$delimiter{$field['Field']}";
+            $delimiter=',';
+        }
         $fill_entries_table_sql = "
             INSERT INTO 
                 " . DB_PREFIX . "iss_sync_entries 
-                    (`is_changed`,`sync_id` , `category_lvl1` , `category_lvl2` , `category_lvl3` , `product_name` , `model` , `ean` , `mpn` , `description` , `min_order_size`, `stock_count` , `stock_status` , `manufacturer` , `attribute1` , `attribute2` , `attribute3` , `attribute4` , `attribute5` ,  `attribute6` , `attribute7` , `attribute8` , `attribute9` , `attribute10` , `attribute11` , `attribute12` ,`attribute_group` , `image` , `image1` , `image2` , `image3` , `image4` , `image5` , `price1` , `price2` , `price3` , `price4` , `option_group1`,`price_group1`,`price`)
-                SELECT          1,`sync_id` , `category_lvl1` , `category_lvl2` , `category_lvl3` , `product_name` , `model` , `ean` , `mpn` , `description` , `min_order_size`, `stock_count` , `stock_status` , `manufacturer` , `attribute1` , `attribute2` , `attribute3` , `attribute4` , `attribute5` ,  `attribute6` , `attribute7` , `attribute8` , `attribute9` , `attribute10` , `attribute11` , `attribute12` ,`attribute_group` , `image` , `image1` , `image2` , `image3` , `image4` , `image5` , `price1` , `price2` , `price3` , `price4` ,
-                    GROUP_CONCAT(option1 SEPARATOR '|') AS `option_group1`,
-                    GROUP_CONCAT(price1 SEPARATOR '|') AS `price_group1`,
-                    MIN(price1) AS `price`
+                    ($insert_fields)
+                SELECT 
+                    $select_fields
                 FROM 
                     iss_tmp_current_sync
                 GROUP BY CONCAT(`category_lvl1`,'/',`category_lvl2`,'/',`category_lvl3`), model";

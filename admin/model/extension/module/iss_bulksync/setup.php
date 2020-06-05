@@ -11,7 +11,7 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
     public function addParser($sync_parser_name, $sync_name) {
         $this->db->query("INSERT INTO " . DB_PREFIX . "iss_sync_list SET sync_parser_name='{$sync_parser_name}', sync_name='{$sync_name}',sync_config=''");
     }
-
+    
     public function getSyncList($sync_id = 0) {
         $where = "";
         if ($sync_id) {
@@ -29,7 +29,7 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
 
     public function updateSync($sync_id, $sync_name, $config) {
         if ($sync_id) {
-            $parser_config = json_encode($config);
+            $parser_config = json_encode($config,JSON_UNESCAPED_UNICODE);
             $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_list SET sync_name='$sync_name',sync_config='$parser_config' WHERE sync_id='$sync_id'");
             return true;
         }
@@ -103,7 +103,7 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
             UPDATE 
              " . DB_PREFIX . "iss_sync_groups
             SET
-                comission = " . (int) $data['category_comission'] . ",
+                comission = " . (float) $data['category_comission'] . ",
                 destination_categories = '" . $data['destination_categories'] . "'
             WHERE group_id = " . (int) $data['group_id'];
         return $this->db->query($sql);

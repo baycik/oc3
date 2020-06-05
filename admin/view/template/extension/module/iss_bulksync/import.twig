@@ -84,7 +84,7 @@
                         <table style="width:100%;">
                             <tr>
                                 <td style="width:100%; ">
-                                    <input type="text" class="form-control" name="filter_name" value="{{ filter_name }}" placeholder="{{text_input_category}}" style="display:inline-block;width: 96%;"/>
+                                    <input type="text" class="form-control" name="filter_name" value="{{ filter_name }}" placeholder="{{text_filter_group}}" style="display:inline-block;width: 96%;"/>
                                     <button class="btn btn-primary" style="width:3%;padding: 11px;display:inline-block;"><i class="fa fa-search"></i></button>
                                 </td>
                             </tr>
@@ -112,10 +112,10 @@
                                                     <td class="text-left category_lvl">{% if category.category_lvl3 %}{{ category.category_lvl3 }}/{% endif %}</td>
                                                     <td class="text-left">{{ category.total_products }}</td>
                                                     <td class="text-left">
-                                                        <input style=""  type="text" name="category_comission" value="{{ category.comission }}" placeholder="%" data-group_id="{{ category.group_id }}" class="form-control" />
+                                                        <input style=""  type="text" name="category_comission" value="{{ category.comission }}" placeholder="{{text_comission}} %" data-group_id="{{ category.group_id }}" class="form-control" />
                                                     </td>
                                                     <td class="text-left" data-group_id="{{ category.group_id }}">
-                                                        <input type="text" name="category" value="" placeholder="{{ entry_category }}"class="form-control"/>
+                                                        <input type="text" name="category" value="" placeholder="{{ text_entry_category }}"class="form-control"/>
                                                         <div class="destination-category-panel" class="well well-sm" style="overflow: auto;"> 
                                                             {% set destination_category_list = category.destination_categories|split('||') %}
                                                             {% for destination_category in  destination_category_list %}
@@ -166,7 +166,7 @@
             var $row_node=$(`tr[data-group_id=${group_id}]`);
 	    var item = {
 		group_id: group_id,
-		category_comission: $row_node.find('input[name=category_comission]').val().replace(/[^\d\.]/g, ''),
+		category_comission: $row_node.find('input[name=category_comission]').val().replace(/[^\d\.-]/g, ''),
 		destination_categories: $row_node.find('input[name=destination_category]').val().substring(1).slice(0,-1) 
 	    };
 	    if (item.destination_categories !== "") {
@@ -203,11 +203,13 @@
                 current_progress=0;
 		$('.progress-bar').width('100%');
 		$('.progress-header').html('{{text_delete_absent}}');
-		$.post('index.php?route=extension/module/iss_bulksync_import/deleteAbsentProducts&user_token={{ user_token }}').done(function(){
+		$.post('index.php?route=extension/module/iss_bulksync_import/deleteAbsentProducts&user_token={{ user_token }}').done(function(ok){
 		    $('.progress-header').html('{{text_import_finished}}');
 		    $('#spinner_icon').hide();
 		    $(".btn-secondary").attr('disabled', null);
-		    alert('{{text_import_finished}}');
+                    if( !ok*1 ){
+                        alert('{{text_import_failed}}');
+                    }
 		});
 		return;
 	    }

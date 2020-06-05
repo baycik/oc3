@@ -1,7 +1,7 @@
 <?php		
 //Heading
 $_['heading_title']          	=	"IsellSoft Bulksync List";
-$_['heading_title_parser']      =	"IsellSoft BulkSync Source list";
+$_['heading_title_parser']      =	"BulkSync Source list";
 //Text
 $_['text_select_parser']        =	"Choose Source";
 $_['text_loading_completed']    =	"Loading Finished!";
