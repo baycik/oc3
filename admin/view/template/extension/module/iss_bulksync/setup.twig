@@ -685,6 +685,13 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label>Delete absent in source products after import:</label>
+                                <select name="delete_absent_products" class="form-control">
+                                    <option value="yes">Yes</option>
+                                    <option value="">No (default)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label>Meta Tag Keyword prefix:</label>
                                 <input class="form-control" name="meta_keyword_prefix" placeholder="Meta Tag keyword prefix">
                             </div>
@@ -731,6 +738,7 @@
             location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&user_token={{ user_token }}'; 
         },
         selectParser:function(sync_id){
+            Setup.sync_id = sync_id;
             Setup.adjustActionButtons();
         },
         adjustActionButtons: function () {

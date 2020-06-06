@@ -41,12 +41,8 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         $this->db->query("DROP TEMPORARY TABLE IF EXISTS iss_tmp_previous_sync"); #TEMPORARY
         $this->db->query("CREATE TEMPORARY TABLE iss_tmp_previous_sync AS (SELECT * FROM iss_sync_entries WHERE sync_id='$sync_id')");
 
-        $this->db->query("DROP TEMPORARY TABLE IF EXISTS iss_tmp_current_sync"); #TEMPORARY
-        $this->db->query("CREATE TEMPORARY TABLE iss_tmp_current_sync LIKE iss_sync_entries");
-//
-//        if ($mode == 'partial_parse') {
-//            $this->db->query("INSERT INTO iss_tmp_current_sync SELECT * FROM iss_sync_entries");
-//        }
+        $this->db->query("DROP  TABLE IF EXISTS iss_tmp_current_sync"); #TEMPORARY
+        $this->db->query("CREATE  TABLE iss_tmp_current_sync LIKE iss_sync_entries");
     }
 
     private function finish_parsing($sync_id, $mode) {
@@ -58,6 +54,9 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         $select_fields='';
         $delimiter='';
         foreach( $fields->rows as $field ){
+            if( $field['Field']=='sync_entry_id' ){
+                continue;
+            }
             $insert_fields.="$delimiter`{$field['Field']}`";
             if($field['Field']=='option_group1'){
                 $field['Field']="GROUP_CONCAT(option1 SEPARATOR '|') AS `option_group1`";
@@ -90,7 +89,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
                 UPDATE
                     iss_sync_entries bse
                         JOIN
-                    iss_tmp_previous_sync bps USING (`sync_id` , `category_lvl1` , `category_lvl2` , `category_lvl3` , `product_name` , `model` , `ean` , `mpn` , `description` , `min_order_size` , `stock_count` , `stock_status` , `manufacturer` , `attribute1` , `attribute2` , `attribute3` , `attribute4` , `attribute5` , `attribute6` , `attribute7` , `attribute8` , `attribute9` , `attribute10`, `attribute11`, `attribute12` ,`attribute_group`, `option1` , `option2` , `option3` , `image` , `image1` , `image2` , `image3` , `image4` , `image5` , `price1`)
+                    iss_tmp_previous_sync bps USING ($insert_fields)
                 SET
                     bse.is_changed=0
                 WHERE sync_id='$sync_id'";

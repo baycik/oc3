@@ -203,7 +203,7 @@
                 current_progress=0;
 		$('.progress-bar').width('100%');
 		$('.progress-header').html('{{text_delete_absent}}');
-		$.post('index.php?route=extension/module/iss_bulksync_import/deleteAbsentProducts&user_token={{ user_token }}').done(function(ok){
+		$.post('index.php?route=extension/module/iss_bulksync_import/deleteAbsentProducts&user_token={{ user_token }}',{sync_id: sync_id}).done(function(ok){
 		    $('.progress-header').html('{{text_import_finished}}');
 		    $('#spinner_icon').hide();
 		    $(".btn-secondary").attr('disabled', null);
