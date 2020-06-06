@@ -1,7 +1,7 @@
 ROBOCOPY "../../admin/controller/extension/module/" "./upload/admin/controller/extension/module/" iss_bulksync_cron.php iss_bulksync_import.php iss_bulksync_setup.php
 
 
-
+ROBOCOPY "../../admin/model/extension/module/iss_bulksync/" "./upload/admin/model/extension/module/iss_bulksync/"  /mir
 
 
 ROBOCOPY "../../admin\language\tr-tr\extension\module/iss_bulksync/" "./upload/admin\language\tr-tr\extension\module/iss_bulksync/"  /mir

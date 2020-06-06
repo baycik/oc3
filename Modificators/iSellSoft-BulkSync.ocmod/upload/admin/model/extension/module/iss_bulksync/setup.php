@@ -118,7 +118,12 @@ class ModelExtensionModuleIssBulkSyncSetup extends Model {
             $patch_version = str_replace('.sql', '', $patch);
             if (strpos($db_applied_patches, $patch_version) === false) {
                 $patch_sql = file_get_contents($directory . $patch);
-                $this->db->query($patch_sql);
+                try{
+                    $this->db->query($patch_sql);
+                }
+                catch(Exception $e){
+                    echo $e->getMessage();
+                }
                 $db_applied_patches .= "|" . $patch_version;
                 $this->db->query("DELETE FROM " . DB_PREFIX . "setting WHERE `key`='iss_bulksync_db_applied_patches'");
                 $this->db->query("INSERT INTO " . DB_PREFIX . "setting SET value='$db_applied_patches',`key`='iss_bulksync_db_applied_patches'");
