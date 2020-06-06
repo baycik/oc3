@@ -74,7 +74,7 @@ $_['text_filter_delimiters']    =	"Filtre sınırlayıcıları";
 $_['text_parsing_mode']         =	"Ayrıştırma modu";
 $_['text_parse_changed_only']   =	"Yalnızca değişmiş girdileri içe aktar";
 $_['text_parse_all']            =	"Değişmiş ve değişmemiş girdileri içe aktar";
-$_['text_delete_absent']            =	"Kaynakta olmayan ürünleri ithalattan sonra sil";
+$_['text_delete_absent']            =	"Kaynaklarda olmayan ürünleri ithalattan sonra sil";
 
 $_['text_import_images']        =	"Görüntülerin içe aktarılması";
 $_['text_images_new_only']      =	"Yalnızca yeni ürünler için resim eklensin veya indirilsin (hızlı)";
