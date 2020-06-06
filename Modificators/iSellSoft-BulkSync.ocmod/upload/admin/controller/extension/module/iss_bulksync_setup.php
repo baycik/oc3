@@ -43,8 +43,8 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         
 	$this->load->model('extension/module/iss_bulksync/setup');
         $this->model_extension_module_iss_bulksync_setup->updateDb();
-        $data['sync_list'] = $this->model_extension_module_iss_bulksync_setup->getSyncList($user_id);
-        $data['parser_list'] = $this->model_extension_module_iss_bulksync_setup->getParserList($user_id);
+        $data['sync_list'] = $this->model_extension_module_iss_bulksync_setup->getSyncList();
+        $data['parser_list'] = $this->model_extension_module_iss_bulksync_setup->getParserList();
        
 	$this->response->setOutput($this->load->view('extension/module/iss_bulksync/setup', $data));
     }
