@@ -56,7 +56,7 @@ $_['text_options_time']         =	"Time";
 $_['text_options_datetime']     =	"Date & Time";
 
 $_['text_attributes']           =	"Attributes";
-$_['text_attribute_name']       =	"Attibute name";
+$_['text_attribute_name']       =	"Attibute name|Attibute group";
 $_['text_attribute1']           =	"Attibute 1";
 $_['text_attribute2']           =	"Attibute 2";
 $_['text_attribute3']           =	"Attibute 3";

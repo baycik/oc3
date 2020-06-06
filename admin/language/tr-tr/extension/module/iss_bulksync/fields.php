@@ -55,7 +55,7 @@ $_['text_options_time']         =	"Time";
 $_['text_options_datetime']     =	"Date & Time";
 
 $_['text_attributes']           =	"Özellikler";
-$_['text_attribute_name']       =	"Özellik adı";
+$_['text_attribute_name']       =	"Özellik adı|Özellik grubu";
 $_['text_attribute1']           =	"Özellik 1";
 $_['text_attribute2']           =	"Özellik 2";
 $_['text_attribute3']           =	"Özellik 3";
