@@ -13,7 +13,7 @@
         margin-right: auto; 
         width: 70%;
     }
-    
+
     .btn-upload-positive{
         width: 50%;
     } 
@@ -30,13 +30,13 @@
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
-          
-          <h1>{{ heading_title }}</h1>
-          <ul class="breadcrumb">
-            {% for breadcrumb in breadcrumbs %}
-            <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
-            {% endfor %}
-          </ul>
+
+            <h1>{{ heading_title }}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                    {% endfor %}
+            </ul>
         </div>
     </div>
     <div class="successdiv">
@@ -49,160 +49,802 @@
             <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
         {% endif %}
     </div>
-    
+
     <div class="container-fluid">
         <div id="content" class="panel panel-default">{{ content_top }}
             <div class="panel-heading">
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_add_parser_title }}</h3>
             </div>
             <div class="panel-body">
-            <form action="index.php?route=extension/module/iss_bulksync_parserlist/addparser&user_token={{ user_token }}" method="post">
-                <input type="hidden" name="parser_id">
-                {% for id, parser in parser_list %}
-                    <button class="btn btn-primary" onclick="$('input[name=parser_id]').val('{{id}}')">
-                        <i class="fa fa-plus"></i>
-                         {{ button_add_parser_item }} "{{parser.name}}"
-                    </button>
-                {% endfor %}
-            </form>
-            {% if  sync_list  %}
-                <div class="panel-body">
-                    <form id='form-parse'>
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label>{{ text_select_parser }}</label>
-                                    <select class="form-control"  >
-                                        {% for sync in sync_list %}
-                                            <option value="{{sync.sync_id}}" data-parser_name="{{sync.sync_name}}">
-                                                {% if  sync.sync_last_started %} 
-                                                    {{sync.sync_name}} ({{text_last_download}}: {{sync.sync_last_started}})
-                                                {% else %}
-                                                    {{sync.sync_name}} ({{text_was_no_download}})
-                                                {% endif %}
+                <form action="index.php?route=extension/module/iss_bulksync_setup/addparser&user_token={{ user_token }}" method="post">
+                    <input type="hidden" name="sync_parser_name">
+                    <input type="hidden" name="sync_name">
+                    {% for parser_id, parser_name in parser_list %}
+                        <button class="btn btn-primary" onclick="$('input[name=sync_parser_name]').val('{{parser_id}}');$('input[name=sync_name]').val('{{parser_name}}');">
+                            <i class="fa fa-plus"></i>
+                            {{ button_add_parser_item }} "{{parser_name}}"
+                        </button>
+                    {% endfor %}
+                </form>
+                {% if  sync_list  %}
+                    <div class="panel-body">
+                        <form id='form-parse'>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label>{{ text_select_parser }}</label>
+                                        <select data-type="source" class="form-control"  >
+                                            {% for sync in sync_list %}
+                                                <option value="{{sync.sync_id}}" data-sync_parser_name="{{sync.sync_parser_name}}" data-sync_name="{{sync.sync_name}}">
+                                                    {% if  sync.sync_last_started %} 
+                                                        {{sync.sync_name}} ({{text_last_download}}: {{sync.sync_last_started}})
+                                                    {% else %}
+                                                        {{sync.sync_name}} ({{text_was_no_download}})
+                                                    {% endif %}
                                                 </option>
-                                        {% endfor %}
-                                    </select>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="but col" > 
+                                    <button type="button" class="btn btn-primary btn-upload-positive" style="width:50%"><i class="fa fa-upload"></i> {{button_parse}}</button>
+                                    <button type="submit" class="btn btn-primary btn-download-positive" style="width:50%"><i class="fa fa-download"></i> {{button_parse}}</button>
+                                    <button type="button" class="btn btn-default btn-secondary"><i class="fa fa-eye"></i> {{ button_open_parser }}</button>
+                                    <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                                </div>
+                            </div>    
+                        </form>
+                    </div>
+                {% endif %}
+                <div class="panel-body"  id="iss_selector_panel" style="display:none">
+                    <!-- SELECTOR FORM -->
+                    <form id="iss_selector_form">
+                        <div class="well">
+                            <h2>Source settings</h2>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Source Name: </label>
+                                        <input class="form-control" name="sync_name" placeholder="Source Name" required="required">
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Source Language: </label>
+                                        <select data-type="source" class="form-control" name="source_language" required="required">
+                                            {% for lang in language_list %}
+                                            <option value="{{ lang.language_id }}">{{ lang.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+
                                 </div>
                             </div>
-                            <div class="but col" > 
-                                <button type="button" class="btn btn-primary btn-upload-positive" style="width:50%"><i class="fa fa-upload"></i> {{button_parse}}</button>
-                                <button type="submit" class="btn btn-primary btn-download-positive" style="width:50%"><i class="fa fa-download"></i> {{button_parse}}</button>
-                                <button type="button" class="btn btn-default btn-secondary"><i class="fa fa-eye"></i> {{ button_open_parser }}</button>
-                                <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
+                        </div>
+
+                        <div class="well">
+                            <h2>Grouping</h2>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Source Group 1: </label>
+                                        <select data-type="source" class="form-control" name="category_lvl1-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Source Group 2: </label>
+                                        <select data-type="source" class="form-control" name="category_lvl2-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Source Group 3: </label>
+                                        <select data-type="source" class="form-control" name="category_lvl2-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
-                        </div>    
+                        </div>
+
+                        <div class="well">
+                            <h2>Product general info</h2>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Model: </label>
+                                        <select data-type="source" class="form-control" name="model-source"  required="required">
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Name: </label>
+                                        <select data-type="source" class="form-control" name="product_name-source"  required="required">
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Description: </label>
+                                        <select data-type="source" class="form-control" name="description-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Manufacturer: </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="manufacturer-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="manufacturer-infilter" class="form-control" style="display:inline-block;"> filter
+                                        </div>
+                                        <select data-type="source" class="form-control" name="manufacturer-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Tag: </label>
+                                        <select data-type="source" class="form-control" name="tag-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Points: </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="points-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                        </div>
+                                        <select data-type="source" class="form-control" name="points-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Barcode (EAN): </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="ean-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                        </div>
+                                        <select data-type="source" class="form-control" name="ean-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Manufacturer product number (MPN): </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="mpn-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                        </div>
+                                        <select data-type="source" class="form-control" name="mpn-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Weight: </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="weight-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                        </div>
+                                        <select data-type="source" class="form-control" name="weight-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Width: </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="width-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                        </div>
+                                        <select data-type="source" class="form-control" name="width-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Length: </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="length-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                        </div>
+                                        <select data-type="source" class="form-control" name="length-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Height: </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="height-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                        </div>
+                                        <select data-type="source" class="form-control" name="height-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="well">
+                            <h2>Product Data</h2>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Price: </label>
+                                        <select data-type="source" class="form-control" name="price1-source" required="required">
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Stock count: </label>
+                                        <select data-type="source" class="form-control" name="stock_count-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Stock status: </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="stock_status-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="stock_status-infilter" class="form-control" style="display:inline-block;"> filter
+                                        </div>
+                                        <select data-type="source" class="form-control" name="stock_status-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Min order size: </label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="min_order_size-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="min_order_size-infilter" class="form-control" style="display:inline-block;"> filter
+                                        </div>
+                                        <select data-type="source" class="form-control" name="min_order_size-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="well">
+                            <h2>Images</h2>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label>Image handling: </label>
+                                        <select data-type="source" class="form-control" name="image_handling" >
+                                            <option value="use">Use source as filename or url</option>
+                                            <option value="load">Load from url specified in source</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Main image: </label>
+                                        <select data-type="source" class="form-control" name="image-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Additional Image 1: </label>
+                                        <select data-type="source" class="form-control" name="image1-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Additional Image 2: </label>
+                                        <select data-type="source" class="form-control" name="image2-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Additional Image 3: </label>
+                                        <select data-type="source" class="form-control" name="image3-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Additional Image 4: </label>
+                                        <select data-type="source" class="form-control" name="image4-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Additional Image 5: </label>
+                                        <select data-type="source" class="form-control" name="image5-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="well">
+                            <h2>Options</h2>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Option:</label>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="option1-label" placeholder="Option name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="option1-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>  
+                                            <div class="col-sm-4">
+                                                <select class="form-control" name="option1-selectortype" >
+                                                    <option value="select">Select</option>
+                                                    <option value="radio">Radio</option>
+                                                    <option value="checkbox">Checkbox</option>
+                                                    <option value="text">Text</option>
+                                                    <option value="file">File</option>
+                                                    <option value="date">Date</option>
+                                                    <option value="time">Time</option>
+                                                    <option value="datetime">Date & Time</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+
+                        <div class="well">
+                            <h2>Attributes</h2>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 1:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute1-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute1-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute1-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 2:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute2-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute2-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute2-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 3:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute3-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute3-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute3-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                
+
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 4:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute4-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute4-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute4-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 5:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute5-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute5-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute5-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 6:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute6-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute6-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute6-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                    
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 7:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute7-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute7-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute7-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 8:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute8-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute8-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute8-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 9:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute9-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute9-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute9-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                    
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 10:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute10-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute10-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute10-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 11:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute11-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute11-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute11-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label>Attribute 12:</label>
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute12-infilter" class="form-control" style="display:inline-block"> filter
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input class="form-control" name="attribute12-label" placeholder="Attribute name">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <select data-type="source" class="form-control" name="attribute12-source" >
+                                                    {{ source_column_options }}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                    
+                        </div>
+                                                
+                                                
+                         <a href="#iss_selector_form_extra" data-toggle="collapse">Extra settings</a>
+
+                        <div id="iss_selector_form_extra" class="collapse">
+                            <div class="form-group">
+                                <label>Filter delimeters:</label>
+                                <input class="form-control" name="filter_delimeter" placeholder="Filter delimeters">
+                            </div>
+                            <div class="form-group">
+                                <label>Parsing mode:</label>
+                                <select name="parsing_mode" class="form-control">
+                                    <option value="detect_unchanged_entries">Import only changed entries</option>
+                                    <option value="import_all">Import changed and unchanged entries</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Import of images:</label>
+                                <select name="image_mode" class="form-control">
+                                    <option value="only_new_products">Add or download images only for new products (fast)</option>
+                                    <option value="all_products">Add or download images for all products</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Meta Tag Keyword prefix:</label>
+                                <input class="form-control" name="meta_keyword_prefix" placeholder="Meta Tag keyword prefix">
+                            </div>
+                            <div class="form-group">
+                                <label>Meta Tag Description prefix:</label>
+                                <input class="form-control" name="meta_description_prefix" placeholder="Meta Tag description prefix">
+                            </div>
+                            
+                        </div> 
                     </form>
+                    <!-- /SELECTOR FORM -->
                 </div>
-             {% endif %}
-             </div>
-            {{ content_bottom }}</div>
-        {{ column_right }}</div>
+            </div>
+            {{ content_bottom }}
+        </div>
+        {{ column_right }}
+    </div>
 </div>
 <script type="text/javascript">
-    function adjustActionButtons(){
-        var parser_name = $('#form-parse select').find('option[value='+$('#form-parse select').val()+']').data('parser_name');
-        if(parser_name && parser_name.indexOf('{{text_import_table}}')>-1 ){ 
-            var upload_label=`<i class="fa fa-upload"></i> ${parser_name}`;
-            $(".btn.btn-upload-positive").show().html(upload_label);
-            $(".btn.btn-download-positive").hide();
-        } else {
-            var download_label=`<i class="fa fa-download"></i> ${parser_name}`;
-            $(".btn.btn-download-positive").show().html(download_label);
-            $(".btn.btn-upload-positive").hide();
-        }
-    }
-    $(document).on('ready', adjustActionButtons);
-    $('#form-parse select').on('change', adjustActionButtons);
-    
-    $("#form-parse .btn-danger").click(function(){
-        if( confirm("{{text_delete_parser}}") ){
-            var sync_id = $('#form-parse select').val();
-            $.post('index.php?route=extension/module/iss_bulksync_parserlist/deleteparser&user_token={{ user_token }}', {sync_id: sync_id}, function (ok) {
-                location.reload();
+    Setup = {
+        init: function () {
+            Setup.adjustActionButtons();
+            Setup.adjustActions();
+            $("#form-parse .btn-primary").click(function () {
+                Setup.startParsing();
             });
-        }
-    });
-    
-    $("#form-parse .btn-secondary").click(function(){
-	var sync_id = $('#form-parse select').val();
-	location = 'index.php?route=extension/module/iss_bulksync_import&sync_id='+sync_id+'&user_token={{ user_token }}';
-    });
-
-    var syncing_in_progress=false;
-    $("#form-parse").on('submit', function (e) {
-        var sync_id = $(this).find('select').val();
-        if( syncing_in_progress || !sync_id ){
-            return;
-        }
-        syncing_in_progress=true;
-        $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parsing}}');
-        e.preventDefault();
-        $.post('index.php?route=extension/module/iss_bulksync_parserlist/startParsing&user_token={{ user_token }}', {sync_id: sync_id}, function (ok) {
-            syncing_in_progress=false
-            if (ok*1) {
-                alert('{{text_loading_completed}}');
-                $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
-                location = 'index.php?route=extension/aruna/sellersync&sync_id='+sync_id+'&user_token={{ user_token }}';
+            $("#form-parse .btn-secondary").click(function () {
+                Setup.openImport();
+            });
+            $('#form-parse select').change(function(){
+                var sync_id=$('#form-parse select').val();
+                Setup.selectParser(sync_id);
+            });
+            
+            $(".btn.btn-upload-positive").click(Setup.upload_file);
+        },
+        sync_id: 0,
+        user_token: '{{ user_token }}',
+        startParsing:function(){
+            
+        },
+        openImport:function(){
+            Setup.sync_id = $('#form-parse select').val();
+            location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&user_token={{ user_token }}'; 
+        },
+        selectParser:function(sync_id){
+            Setup.adjustActionButtons();
+        },
+        adjustActionButtons: function () {
+            var $option=$('#form-parse select').find('option[value=' + $('#form-parse select').val() + ']');
+            Setup.sync_parser_name = $option.data('sync_parser_name');
+            Setup.sync_name = $option.data('sync_name');
+            if (Setup.sync_parser_name && Setup.sync_parser_name.indexOf('upload') > -1) {
+                var upload_label = `<i class="fa fa-upload"></i> ${Setup.sync_name}`;
+                $(".btn.btn-upload-positive").show().html(upload_label);
+                $(".btn.btn-download-positive").hide();
+                
+                $("#iss_selector_panel").show();
             } else {
-                $("#form-parse .btn-download-positive").html('{{button_parse}}');
-                alert("Error occured: "+ok);
+                var download_label = `<i class="fa fa-download"></i> ${Setup.sync_name}`;
+                $(".btn.btn-download-positive").show().html(download_label);
+                $(".btn.btn-upload-positive").hide();
+                
+                $("#iss_selector_panel").hide();
             }
-        });
-    });
-    
-    $('button.btn-upload-positive').on('click', function() {
-	var element = this;
-	$('#form-upload').remove();
-	$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
-	$('#form-upload input[name=\'file\']').trigger('click');
-	if (typeof timer != 'undefined') {
-            clearInterval(timer);
-	}
-	timer = setInterval(function() {
-            if ($('#form-upload input[name=\'file\']').val() != '') {
-                clearInterval(timer);
-                $.ajax({
-                    url: 'index.php?route=tool/upload/upload&user_token={{ user_token }}',
-                    type: 'post',
-                    dataType: 'json',
-                    data: new FormData($('#form-upload')[0]),
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function() {
-                        $(element).button('loading');
-                    },
-                    complete: function() {
-                        $(element).button('reset');
-                    },
-                    success: function(json) {
-                        $(element).parent().find('.text-danger').remove();
-                        if (json['error']) {
-                            $(element).parent().find('input').after('<div class="text-danger">' + json['error'] + '</div>');
-                        }
-                        if (json['success']) {
-                            var sync_id = $("#form-parse").find('select').val();
-                            $(element).parent().find('input').val(json['code']);
-                            $.post('index.php?route=extension/module/iss_bulksync_parserlist/startParsing&user_token={{ user_token }}', {sync_id: sync_id, code: json['code']}, function (ok) {
-                                syncing_in_progress=false;
-                                if (ok*1) {
-                                    alert('{{ text_loading_completed }}');
-                                    $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
-                                    location = 'index.php?route=extension/module/iss_bulksync_parserlist&sync_id='+sync_id+'&user_token={{ user_token }}';
-                                } else {
-                                    $("#form-parse .btn-download-positive").html('{{button_parse}}');
-                                    alert("{{ text_error_while_parsing }}: "+ok);
-                                }
-                            });
-                        }
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+        },
+
+        adjustActions: function () {
+            Setup.sync_id = $('#form-parse select').val();
+            $('#form-parse select').on('change', Setup.adjustActionButtons);
+            $("#form-parse .btn-danger").click(function () {
+                if (confirm("{{text_delete_parser}}")) {
+                    Setup.sync_id = $('#form-parse select').val();
+                    $.post('index.php?route=extension/module/iss_bulksync_setup/deleteparser&user_token={{ user_token }}', {sync_id: Setup.sync_id}, function (ok) {
+                        location.reload();
+                    });
+                }
+            });
+            Setup.syncing_in_progress = false;
+            $("#form-parse").on('submit', function (e) {
+                Setup.sync_id = $(this).find('select').val();
+                if (Setup.syncing_in_progress || !Setup.sync_id) {
+                    return;
+                }
+                Setup.syncing_in_progress = true;
+                $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parsing}}');
+                e.preventDefault();
+                $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&user_token={{ user_token }}', {sync_id: Setup.sync_id}, function (ok) {
+                    Setup.syncing_in_progress = false
+                    if (ok * 1) {
+                        //alert('{{text_loading_completed}}');
+                        $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
+                        location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&user_token={{ user_token }}';
+                    } else {
+                        $("#form-parse .btn-download-positive").html('{{button_parse}}');
+                        alert("Error occured: " + ok);
                     }
                 });
+            });
+        },
+        timer:0,
+        upload_file:function(){
+            if( !Setup.selectorForm.save() ){
+                return false;
             }
-	}, 500);
-     });
+            var element = this;
+            $('#form-upload').remove();
+            $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+            $('#form-upload input[name=\'file\']').trigger('click');
+            clearInterval(Setup.timer);
+            Setup.timer = setInterval(function () {
+                if ($('#form-upload input[name=\'file\']').val() !== '') {
+                    clearInterval(Setup.timer);
+                    $.ajax({
+                        url: 'index.php?route=tool/upload/upload&user_token={{ user_token }}',
+                        type: 'post',
+                        dataType: 'json',
+                        data: new FormData($('#form-upload')[0]),
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function () {
+                            $(element).button('loading');
+                        },
+                        complete: function () {
+                            $(element).button('reset');
+                        },
+                        success: function (json) {
+                            if( json['error'] ) {
+                                alert(json['error']);
+                            }
+                            if (json['success']) {
+                                Setup.sync_id = $("#form-parse").find('select').val();
+                                $(element).parent().find('input').val(json['code']);
+                                var request={
+                                    sync_id: Setup.sync_id,
+                                    code: json['code']
+                                };
+                                $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&user_token={{ user_token }}', request, function (ok) {
+                                    Setup.syncing_in_progress = false;
+                                    if (ok * 1) {
+                                        alert('{{ text_loading_completed }}');
+                                        $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
+                                        location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&user_token={{ user_token }}';
+                                    } else {
+                                        $("#form-parse .btn-download-positive").html('{{button_parse}}');
+                                        alert("{{ text_error_while_parsing }}: " + ok);
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                        }
+                    });
+                }
+            }, 500);
+        }
+    };
+    $(document).on('ready', Setup.init);
 </script>
+<script type="text/javascript" src="view/javascript/iss_bulksync/csv.js"></script>
 {{ footer }}

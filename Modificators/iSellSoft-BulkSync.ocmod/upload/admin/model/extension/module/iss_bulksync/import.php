@@ -2,27 +2,29 @@
 
 class ModelExtensionModuleIssBulksyncImport extends Model {
    private $sync_id;
-   private $meta_keyword_prefix="META KEYWORD - ";
-   private $meta_description_prefix="META DESCRIPTION - ";
+   private $meta_keyword_prefix="";
+   private $meta_description_prefix="";
     
     public function __construct($registry) {
         parent::__construct($registry);
-        $this->language_id = (int) $this->config->get('config_language_id');
         $this->start = microtime(1);
         $this->load->model('extension/module/iss_bulksync/product');
     }
     
     private function loadImportConfig(){
-        $result = $this->db->query("SELECT sync_config FROM " . DB_PREFIX . "iss_sync_list WHERE sync_id='$this->sync_id'");
+        $result = $this->db->query("SELECT sync_config FROM iss_sync_list WHERE sync_id='$this->sync_id'");
         if (!$result->row || !$result->row['sync_config']) {
             return false;
         }
         $this->sync_config = json_decode($result->row['sync_config'], false, 512, JSON_UNESCAPED_UNICODE);
+        $this->language_id=$this->sync_config->source_language;
+        $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
+        $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
         //header("content-type:text/plain");print_r($this->sync_config);
     }
 
     private function profile($msg) {
-        echo "\n $msg " . round(microtime(1) - $this->start, 5);
+        //echo "\n $msg " . round(microtime(1) - $this->start, 5);
     }
 
     public function importStart($sync_id, $group_id = null, $store_id) {
@@ -31,7 +33,6 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         $this->loadImportConfig();
         $this->createNeededProductProperties();
         
-        $required_filter = '';
         $group_filter = '';
         if ($group_id) {
             $group_filter = "AND group_id = '$group_id'"; //if group_id is defined there will be only one row!
@@ -45,7 +46,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
                 (retail_comission+100)/100 retail_comission,
                 destination_categories
             FROM
-               " . DB_PREFIX . "iss_sync_groups
+               iss_sync_groups
             WHERE
                 destination_categories IS NOT NULL
                 AND destination_categories != '0'
@@ -76,10 +77,10 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
                 bse.*,
 		(SELECT product_id FROM " . DB_PREFIX . "product p WHERE p.model=bse.model LIMIT 1) AS product_id
             FROM
-                " . DB_PREFIX . "iss_sync_entries AS bse
+                iss_sync_entries AS bse
             WHERE
-                is_changed
-                AND category_lvl1 = '{$group_data['category_lvl1']}'
+                is_changed AND 
+                category_lvl1 = '{$group_data['category_lvl1']}'
                 AND category_lvl2 = '{$group_data['category_lvl2']}'
                 AND category_lvl3 = '{$group_data['category_lvl3']}'
                 $required_field
@@ -87,24 +88,19 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         $rows = $this->db->query($sql)->rows;
         
         
-        $this->profile("select entries");
+        $this->profile("select entries count:".count($rows));
         if (!count($rows)) {
             return 1;
-        } 
+        }
         foreach ($rows as $row) {
             $product = $this->composeProductObject($row, $group_data['comission'], $group_data['retail_comission'], $group_data['destination_categories']);
-            
             //header("content-type:text/plain");print_r($product);die;
-            if (!empty($row['product_id'])) {
-                $product_ids= explode(',', $row['product_id']);
-                foreach($product_ids as $product_id){
-                    $product['product_id'] = $product_id;
-                    $this->productUpdate($product);
-                }
-            } else {
+            if ( empty($row['product_id']) ) {
                 $this->productAdd($product);
+            } else {    
+                $this->productUpdate($product);
             }
-            $this->db->query("UPDATE " . DB_PREFIX . "iss_sync_entries SET is_changed=0 WHERE sync_entry_id='{$row['sync_entry_id']}'");
+            $this->db->query("UPDATE iss_sync_entries SET is_changed=0 WHERE sync_entry_id='{$row['sync_entry_id']}'");
         }
         $this->profile("import entries");
         $this->assignFiltersToCategory($product['product_category']);
@@ -135,9 +131,9 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
 		FROM
 		    " . DB_PREFIX . "product p
 			LEFT JOIN
-		    " . DB_PREFIX . "iss_sync_entries bse USING(model)
+		    iss_sync_entries bse USING(model)
 			LEFT JOIN
-		    " . DB_PREFIX . "iss_sync_groups AS bsg USING(category_lvl1,category_lvl2,category_lvl3)
+		    iss_sync_groups AS bsg USING(category_lvl1,category_lvl2,category_lvl3)
 		WHERE
 		    bse.sync_id IS NULL
 		    OR destination_categories = ''
@@ -159,6 +155,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
     private function deleteAbsentFiltersAndAttributes() {
         $sql_clean_filters = "DELETE FROM " . DB_PREFIX . "filter WHERE filter_id NOT IN (SELECT filter_id FROM " . DB_PREFIX . "product_filter)";
         $sql_clean_filters_description = "DELETE FROM " . DB_PREFIX . "filter_description WHERE filter_id NOT IN (SELECT filter_id FROM " . DB_PREFIX . "filter)";
+        $sql_clean_filters_groups = "DELETE fg,fgd FROM oc_filter_group fg JOIN oc_filter_group_description fgd USING(filter_group_id) WHERE filter_group_id NOT IN (SELECT filter_group_id FROM oc_filter);";
         $sql_clean_category_filters = "DELETE FROM " . DB_PREFIX . "category_filter WHERE filter_id NOT IN (SELECT filter_id FROM " . DB_PREFIX . "filter)";
         $sql_clean_attributes = "DELETE a,ad FROM " . DB_PREFIX . "attribute a JOIN " . DB_PREFIX . "attribute_description ad USING(attribute_id) WHERE attribute_id NOT IN (SELECT attribute_id FROM " . DB_PREFIX . "product_attribute);";
         $sql_clean_attributes_groups = "DELETE ag,agd FROM " . DB_PREFIX . "attribute_group ag JOIN " . DB_PREFIX . "attribute_group_description agd USING(attribute_group_id) WHERE attribute_group_id NOT IN (SELECT attribute_group_id FROM " . DB_PREFIX . "attribute);";
@@ -168,6 +165,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
 
         $this->db->query($sql_clean_filters);
         $this->db->query($sql_clean_filters_description);
+        $this->db->query($sql_clean_filters_groups);
         $this->db->query($sql_clean_category_filters);
         $this->db->query($sql_clean_attributes);
         $this->db->query($sql_clean_attributes_groups);
@@ -262,6 +260,9 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             $option_prices = explode('|', $option_price);
             $product_option_values = [];
             foreach ($option_value as $i => $value) {
+                if( $value=="" ){
+                    continue;
+                }
                 if (!isset($this->optionsCache[$value])) {
                     $sql = "SELECT *
                     FROM
@@ -373,8 +374,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             return $this->attributeCache[$attribute_name];
         }
         $this->load->model('catalog/attribute');
-        
-        $result = $this->db->query("SELECT attribute_id FROM " . DB_PREFIX . "attribute_description WHERE name='$attribute_name' AND language_id = '$this->language_id'");
+        $result = $this->db->query("SELECT attribute_id FROM " . DB_PREFIX . "attribute_description JOIN " . DB_PREFIX . "attribute USING(attribute_id) WHERE name='$attribute_name' AND attribute_group_id='$attribute_group_id' AND language_id = '$this->language_id'");
         if( $result && isset($result->row['attribute_id']) ){
             $this->attributeCache[$attribute_name] = $result->row['attribute_id'];
             return $this->attributeCache[$attribute_name];
@@ -393,7 +393,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         return $this->attributeCache[$attribute_name];
     }
 
-    private function composeProductAttributeObject($row) {      
+    private function composeProductAttributeObject($row) {  
         if (!isset($this->sync_config->attributes)) {
             return [];
         }
@@ -473,12 +473,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
     }
 
     private function filenamePrepare($str) {
-        $translit = array(
-            "А" => "a", "Б" => "b", "В" => "v", "Г" => "g", "Д" => "d", "Е" => "e", "Ё" => "e", "Ж" => "zh", "З" => "z", "И" => "i", "Й" => "y", "К" => "k", "Л" => "l", "М" => "m", "Н" => "n", "О" => "o", "П" => "p", "Р" => "r", "С" => "s", "Т" => "t", "У" => "u", "Ф" => "f", "Х" => "h", "Ц" => "ts", "Ч" => "ch", "Ш" => "sh", "Щ" => "shch", "Ъ" => "", "Ы" => "y", "Ь" => "", "Э" => "e", "Ю" => "yu", "Я" => "ya",
-            "а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e", "ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m", "н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u", "ф" => "f", "х" => "h", "ц" => "ts", "ч" => "ch", "ш" => "sh", "щ" => "shch", "ъ" => "", "ы" => "y", "ь" => "", "э" => "e", "ю" => "yu", "я" => "ya",
-            "A" => "a", "B" => "b", "C" => "c", "D" => "d", "E" => "e", "F" => "f", "G" => "g", "H" => "h", "I" => "i", "J" => "j", "K" => "k", "L" => "l", "M" => "m", "N" => "n", "O" => "o", "P" => "p", "Q" => "q", "R" => "r", "S" => "s", "T" => "t", "U" => "u", "V" => "v", "W" => "w", "X" => "x", "Y" => "y", "Z" => "z"
-        );
-        $result = strtr($str, $translit);
+        $result = iconv("UTF-8", "ASCII//TRANSLIT//IGNORE", $str);
         $result = preg_replace("/[^a-zA-Z0-9_]/i", "-", $result);
         $result = preg_replace("/\-+/i", "-", $result);
         $result = preg_replace("/(^\-)|(\-$)/i", "", $result);
@@ -560,13 +555,13 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         //DESCRIPTION SECTION
         ////////////////////////////////
         $row['description'] = preg_replace('/{{\w+}}/', '', $row['description']);
-        $product_description[$this->sync_config->language_id] = [
+        $product_description[$this->language_id] = [
             'name' => $row['product_name'],
             'description' => $row['description'],
             'meta_title' => strip_tags($row['product_name']. ' ' . $row['manufacturer']),
             'meta_description' => mb_substr($this->meta_description_prefix . strip_tags($row['description']), 0, 500),
             'meta_keyword' => $this->meta_keyword_prefix . str_replace(' ', ',', strip_tags($row['product_name'])),
-            'tag' => '',
+            'tag' => $row['tag'],
         ];
         ////////////////////////////////
         //COMPOSING SECTION
@@ -577,10 +572,11 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             $sort_order = 1700000000 - time();//new products sort to start
         }
         $product = [
+            'product_id'=>$row['product_id'],
             'model' => $row['model'],
             'sku' => '',
             'upc' => '',
-            'ean' => '',
+            'ean' => $row['ean'],
             'jan' => '',
             'isbn' => '',
             'mpn' => $row['mpn'],
@@ -589,12 +585,12 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'subtract' => '',
             'date_available' => '',
             'price' => round($row['price'] * $category_comission, 0),
-            'points' => 0,
-            'weight' => 0,
+            'points' => $row['points'],
+            'weight' => $row['weight'],
             'weight_class_id' => 0,
-            'length' => 0,
-            'width' => 0,
-            'height' => 0,
+            'length' => $row['length'],
+            'width' => $row['width'],
+            'height' => $row['height'],
             'length_class_id' => 0,
             'tax_class_id' => 0,
             'sort_order' => $sort_order,
@@ -611,14 +607,14 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'product_store' => [$this->store_id],
             'status' => 1
         ];
-        if ( $product_is_new ) {
+        if ( $this->sync_config->image_mode==='all_products' || $product_is_new ) {
             $product['image'] =         $this->composeProductImage($row);
             $product['product_image'] = $this->composeProductImageObject($row);
         }
         if( $category_retail_comission > $category_comission){
             $delta_percent=10;
-                $product['product_special']=$this->composeProductSpecial($product['price']);
-                $product['price']=round($product['price'] * $category_retail_comission * (1-rand(1, $delta_percent)/100), 0);
+            $product['product_special']=$this->composeProductSpecial($product['price']);
+            $product['price']=round($product['price'] * $category_retail_comission * (1-rand(1, $delta_percent)/100), 0);
         }
         return $product;
     }
@@ -658,7 +654,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
                         'sort_order' => 1,
                         'filter_group_description' => [
                             $this->language_id => [
-                                'name' => $filter->name
+                                'name' => $filter->group_description
                             ]
                         ]
                     ];
@@ -669,9 +665,8 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         if (isset($this->sync_config->attributes)) {
             $this->load->model('catalog/attribute_group');
             foreach ($this->sync_config->attributes as &$attribute) {
-                if( !isset($attribute->group_description) ){
-                    $attribute->attribute_group_id=0;
-                    continue;
+                if( empty($attribute->group_description) ){
+                    $attribute->group_description=' ';
                 }
                 $row = $this->db->query("SELECT attribute_group_id FROM " . DB_PREFIX . "attribute_group_description WHERE name='{$attribute->group_description}'")->row;
                 if ($row && $row['attribute_group_id']) {
@@ -705,6 +700,9 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
                             ]
                         ]
                     ];
+                    
+                    
+                    print_r($data);
                     $option->option_id = $this->model_catalog_option->addOption($data);
                 }
             }
@@ -717,7 +715,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
                 group_id,
                 destination_categories
             FROM
-               " . DB_PREFIX . "iss_sync_groups
+               iss_sync_groups
             WHERE
                 destination_categories IS NOT NULL
                 AND destination_categories != '0'

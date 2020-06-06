@@ -71,9 +71,7 @@ class ModelExtensionModuleIssBulksyncProduct extends ModelCatalogProduct {
         if (isset($data['product_category'])) {
             $this->property_sync(DB_PREFIX . "product_to_category", "category_id", $product_id, $data['product_category']);
         }
-        if (isset($data['product_filter'])) {
-            $this->property_sync(DB_PREFIX . "product_filter", "filter_id", $product_id, $data['product_filter']);
-        }
+
 
         $this->db->query("DELETE FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int) $product_id . "'");
 
@@ -90,14 +88,17 @@ class ModelExtensionModuleIssBulksyncProduct extends ModelCatalogProduct {
           $this->db->query("INSERT INTO " . DB_PREFIX . "product_to_category SET product_id = '" . (int) $product_id . "', category_id = '" . (int) $category_id . "'");
           }
           }
+*/
+        $this->db->query("DELETE FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int) $product_id . "'");
 
-          $this->db->query("DELETE FROM " . DB_PREFIX . "product_filter WHERE product_id = '" . (int) $product_id . "'");
-
-          if (isset($data['product_filter'])) {
+        if (isset($data['product_filter'])) {
           foreach ($data['product_filter'] as $filter_id) {
-          $this->db->query("INSERT INTO " . DB_PREFIX . "product_filter SET product_id = '" . (int) $product_id . "', filter_id = '" . (int) $filter_id . "'");
+              $this->db->query("INSERT INTO " . DB_PREFIX . "product_filter SET product_id = '" . (int) $product_id . "', filter_id = '" . (int) $filter_id . "'");
           }
-          } */
+        }
+//        if (isset($data['product_filter'])) {
+//            $this->property_sync(DB_PREFIX . "product_filter", "filter_id", $product_id, $data['product_filter']);
+//        }
     }
 
     private function property_sync($table, $property_id_field, $product_id, $new_property_ids) {
@@ -118,9 +119,9 @@ class ModelExtensionModuleIssBulksyncProduct extends ModelCatalogProduct {
             $this->db->query("INSERT INTO $table SET product_id = '" . (int) $product_id . "', $property_id_field = '" . (int) $property_id . "'");
         }
         if (count($old_property_ids) > 0) {
-            $csv_ids = implode(',', $old_property_ids);
-            if ($csv_ids) {
-                $this->db->query("DELETE FROM $table WHERE product_id = '" . (int) $product_id . "' AND $property_id_field IN ($csv_ids)");
+            $ids = implode(',', $old_property_ids);
+            if ($ids) {
+                $this->db->query("DELETE FROM $table WHERE product_id = '" . (int) $product_id . "' AND $property_id_field IN ($ids)");
             }
         }
     }

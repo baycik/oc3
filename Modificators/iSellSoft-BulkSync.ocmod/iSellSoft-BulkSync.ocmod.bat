@@ -1,6 +1,5 @@
-ROBOCOPY "../../admin/controller/extension/module/iss_bulksync_cron.php" "./upload/admin/controller/extension/module/iss_bulksync_cron.php"
-ROBOCOPY "../../admin/controller/extension/module/iss_bulksync_import.php" "./upload/admin/controller/extension/module/iss_bulksync_import.php"
-ROBOCOPY "../../admin/controller/extension/module/iss_bulksync_parserlist.php" "./upload/admin/controller/extension/module/iss_bulksync_parserlist.php"
+ROBOCOPY "../../admin/controller/extension/module/" "./upload/admin/controller/extension/module/" iss_bulksync_cron.php iss_bulksync_import.php iss_bulksync_setup.php
+
 
 
 
