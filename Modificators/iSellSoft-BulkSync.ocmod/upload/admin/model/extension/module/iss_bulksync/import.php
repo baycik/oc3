@@ -20,7 +20,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         $this->language_id=$this->sync_config->source_language;
         $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
         $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
-        //header("content-type:text/plain");print_r($this->sync_config);
+        //header("content-type:text/plain");print_r($this->sync_config);die;
     }
 
     private function profile($msg) {
@@ -122,7 +122,13 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         $this->model_extension_module_iss_bulksync_product->deleteProduct($product_id);
     }
 
-    public function deleteAbsentProducts() {
+    public function deleteAbsentProducts($sync_id) {
+        $this->sync_id = $sync_id;
+        $this->loadImportConfig();
+        if( empty($this->sync_config->delete_absent_products) || $this->sync_config->delete_absent_products!=='yes' ){
+            echo "Skipping deleteAbsentProducts";
+            return true;
+        }
         set_time_limit(300);
         $this->profile("start deleting absent ");
         $sql = "SELECT 

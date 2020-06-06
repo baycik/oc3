@@ -134,9 +134,9 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
     }
     
     public function deleteAbsentProducts(){
-        $seller_id = $this->customer->getId();
+        $sync_id=$this->request->request['sync_id'];
         $this->load->model('extension/module/iss_bulksync/import');
-	$ok=$this->model_extension_module_iss_bulksync_import->deleteAbsentProducts();
+	$ok=$this->model_extension_module_iss_bulksync_import->deleteAbsentProducts($sync_id);
 	die($ok);
     }
     

@@ -5,6 +5,9 @@ Setup.selectorForm = {
         $(fquery + " input," + fquery + " textarea," + fquery + " select").on('change', function () {
             Setup.selectorForm.save();
         });
+        $('#form-parse select').change(function(){
+            Setup.selectorForm.load();
+        });
         Setup.selectorForm.load();
     },
     get_empty_config:function(){
@@ -106,7 +109,6 @@ Setup.selectorForm = {
         config.sync_name=config.sync_config.sync_name;
         Setup.selectorForm.config=config;
         
-        console.log(config.sync_config);
         var url = `./?route=extension/module/iss_bulksync_setup/syncConfigSave&user_token=${Setup.user_token}`;
         var request = {
             sync_id: Setup.sync_id,
@@ -154,11 +156,16 @@ Setup.selectorForm = {
         $(fquery + " input," + fquery + " textarea," + fquery + " select").each(function (i, element) {
             var value = fvalue[element.name];
             $(element).val(value);
+            $(element).css('background-color', '');
             if (value) {
                 $(element).css('background-color', '#ffc');
             }
-            if ($(element).attr('type') === 'checkbox' && fvalue[element.name] * 1) {
-                $(element).attr('checked', 'checked');
+            if ($(element).attr('type') === 'checkbox') {
+                if( fvalue[element.name] * 1) {
+                    $(element).attr('checked', 'checked');
+                } else {
+                    $(element).removeAttr('checked');
+                }
             }
         });
     },

@@ -100,17 +100,17 @@
                     <!-- SELECTOR FORM -->
                     <form id="iss_selector_form">
                         <div class="well">
-                            <h2>Source settings</h2>
+                            <h2>{{ text_source_settings }}</h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Source Name: </label>
-                                        <input class="form-control" name="sync_name" placeholder="Source Name" required="required">
+                                        <label>{{ text_source_name }}: </label>
+                                        <input class="form-control" name="sync_name" placeholder="{{ text_source_name }}" required="required">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Source Language: </label>
+                                        <label>{{ text_source_language }}: </label>
                                         <select data-type="source" class="form-control" name="source_language" required="required">
                                             {% for lang in language_list %}
                                             <option value="{{ lang.language_id }}">{{ lang.name }}</option>
@@ -125,11 +125,11 @@
                         </div>
 
                         <div class="well">
-                            <h2>Grouping</h2>
+                            <h2>{{ text_grouping }}</h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Source Group 1: </label>
+                                        <label>{{ text_source_group1 }}: </label>
                                         <select data-type="source" class="form-control" name="category_lvl1-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -137,7 +137,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Source Group 2: </label>
+                                        <label>{{ text_source_group2 }}: </label>
                                         <select data-type="source" class="form-control" name="category_lvl2-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -145,7 +145,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Source Group 3: </label>
+                                        <label>{{ text_source_group3 }}: </label>
                                         <select data-type="source" class="form-control" name="category_lvl2-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -155,11 +155,11 @@
                         </div>
 
                         <div class="well">
-                            <h2>Product general info</h2>
+                            <h2>{{ text_product_general_info }}</h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Model: </label>
+                                        <label>{{ text_model }}: </label>
                                         <select data-type="source" class="form-control" name="model-source"  required="required">
                                             {{ source_column_options }}
                                         </select>
@@ -167,7 +167,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Name: </label>
+                                        <label>{{ text_name }}: </label>
                                         <select data-type="source" class="form-control" name="product_name-source"  required="required">
                                             {{ source_column_options }}
                                         </select>
@@ -175,7 +175,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Description: </label>
+                                        <label>{{ text_description }}: </label>
                                         <select data-type="source" class="form-control" name="description-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -185,10 +185,10 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Manufacturer: </label>
+                                        <label>{{ text_manufacturer }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="manufacturer-inattribute" class="form-control" style="display:inline-block;"> attribute
-                                            <input type="checkbox" name="manufacturer-infilter" class="form-control" style="display:inline-block;"> filter
+                                            <input type="checkbox" name="manufacturer-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="manufacturer-infilter" class="form-control" style="display:inline-block;"> {{ text_is_filter }}
                                         </div>
                                         <select data-type="source" class="form-control" name="manufacturer-source" >
                                             {{ source_column_options }}
@@ -197,7 +197,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Tag: </label>
+                                        <label>{{ text_tag }}: </label>
                                         <select data-type="source" class="form-control" name="tag-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -205,9 +205,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Points: </label>
+                                        <label>{{ text_points }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="points-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="points-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
                                         </div>
                                         <select data-type="source" class="form-control" name="points-source" >
                                             {{ source_column_options }}
@@ -218,9 +218,9 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Barcode (EAN): </label>
+                                        <label>{{ text_ean }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="ean-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="ean-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
                                         </div>
                                         <select data-type="source" class="form-control" name="ean-source" >
                                             {{ source_column_options }}
@@ -229,9 +229,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Manufacturer product number (MPN): </label>
+                                        <label>{{ text_mpn }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="mpn-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="mpn-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
                                         </div>
                                         <select data-type="source" class="form-control" name="mpn-source" >
                                             {{ source_column_options }}
@@ -240,9 +240,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Weight: </label>
+                                        <label>{{ text_weight }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="weight-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="weight-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
                                         </div>
                                         <select data-type="source" class="form-control" name="weight-source" >
                                             {{ source_column_options }}
@@ -253,9 +253,9 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Width: </label>
+                                        <label>{{ text_width }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="width-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="width-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
                                         </div>
                                         <select data-type="source" class="form-control" name="width-source" >
                                             {{ source_column_options }}
@@ -264,9 +264,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Length: </label>
+                                        <label>{{ text_length }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="length-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="length-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
                                         </div>
                                         <select data-type="source" class="form-control" name="length-source" >
                                             {{ source_column_options }}
@@ -275,9 +275,9 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Height: </label>
+                                        <label>{{ text_height }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="height-inattribute" class="form-control" style="display:inline-block;"> attribute
+                                            <input type="checkbox" name="height-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
                                         </div>
                                         <select data-type="source" class="form-control" name="height-source" >
                                             {{ source_column_options }}
@@ -288,11 +288,11 @@
                             </div>
                         </div>
                         <div class="well">
-                            <h2>Product Data</h2>
+                            <h2>{{ text_product_data }}</h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Price: </label>
+                                        <label>{{ text_price }}: </label>
                                         <select data-type="source" class="form-control" name="price1-source" required="required">
                                             {{ source_column_options }}
                                         </select>
@@ -300,7 +300,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Stock count: </label>
+                                        <label>{{ text_stock_count }}: </label>
                                         <select data-type="source" class="form-control" name="stock_count-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -308,10 +308,10 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Stock status: </label>
+                                        <label>{{ text_stock_status }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="stock_status-inattribute" class="form-control" style="display:inline-block;"> attribute
-                                            <input type="checkbox" name="stock_status-infilter" class="form-control" style="display:inline-block;"> filter
+                                            <input type="checkbox" name="stock_status-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="stock_status-infilter" class="form-control" style="display:inline-block;"> {{ text_is_filter }}
                                         </div>
                                         <select data-type="source" class="form-control" name="stock_status-source" >
                                             {{ source_column_options }}
@@ -320,10 +320,10 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Min order size: </label>
+                                        <label>{{ text_min_order_size }}: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="min_order_size-inattribute" class="form-control" style="display:inline-block;"> attribute
-                                            <input type="checkbox" name="min_order_size-infilter" class="form-control" style="display:inline-block;"> filter
+                                            <input type="checkbox" name="min_order_size-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="min_order_size-infilter" class="form-control" style="display:inline-block;"> {{ text_is_filter }}
                                         </div>
                                         <select data-type="source" class="form-control" name="min_order_size-source" >
                                             {{ source_column_options }}
@@ -334,14 +334,14 @@
                         </div>
 
                         <div class="well">
-                            <h2>Images</h2>
+                            <h2>{{ text_images }}</h2>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label>Image handling: </label>
+                                        <label>{{ text_image_handling }}: </label>
                                         <select data-type="source" class="form-control" name="image_handling" >
-                                            <option value="use">Use source as filename or url</option>
-                                            <option value="load">Load from url specified in source</option>
+                                            <option value="use">{{ text_image_url_and_source }}</option>
+                                            <option value="load">{{ text_image_url_only }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -349,7 +349,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Main image: </label>
+                                        <label>{{ text_main_image }}: </label>
                                         <select data-type="source" class="form-control" name="image-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -357,7 +357,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Additional Image 1: </label>
+                                        <label>{{ text_additional_image1 }}: </label>
                                         <select data-type="source" class="form-control" name="image1-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -365,7 +365,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Additional Image 2: </label>
+                                        <label>{{ text_additional_image2 }}: </label>
                                         <select data-type="source" class="form-control" name="image2-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -375,7 +375,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Additional Image 3: </label>
+                                        <label>{{ text_additional_image3 }}: </label>
                                         <select data-type="source" class="form-control" name="image3-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -383,7 +383,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Additional Image 4: </label>
+                                        <label>{{ text_additional_image4 }}: </label>
                                         <select data-type="source" class="form-control" name="image4-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -391,7 +391,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Additional Image 5: </label>
+                                        <label>{{ text_additional_image5 }}: </label>
                                         <select data-type="source" class="form-control" name="image5-source" >
                                             {{ source_column_options }}
                                         </select>
@@ -401,14 +401,14 @@
                         </div>
 
                         <div class="well">
-                            <h2>Options</h2>
+                            <h2>{{ text_options }}</h2>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>Option:</label>
+                                        <label>{{ text_option }}:</label>
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <input class="form-control" name="option1-label" placeholder="Option name">
+                                                <input class="form-control" name="option1-label" placeholder="{{ text_option_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="option1-source" >
@@ -417,14 +417,14 @@
                                             </div>  
                                             <div class="col-sm-4">
                                                 <select class="form-control" name="option1-selectortype" >
-                                                    <option value="select">Select</option>
-                                                    <option value="radio">Radio</option>
-                                                    <option value="checkbox">Checkbox</option>
-                                                    <option value="text">Text</option>
-                                                    <option value="file">File</option>
-                                                    <option value="date">Date</option>
-                                                    <option value="time">Time</option>
-                                                    <option value="datetime">Date & Time</option>
+                                                    <option value="select">{{ text_options_select }}</option>
+                                                    <option value="radio">{{ text_options_radio }}</option>
+                                                    <option value="checkbox">{{ text_options_checkbox }}</option>
+                                                    <option value="text">{{ text_options_text }}</option>
+                                                    <option value="file">{{ text_options_file }}</option>
+                                                    <option value="date">{{ text_options_date }}</option>
+                                                    <option value="time">{{ text_options_time }}</option>
+                                                    <option value="datetime">{{ text_options_datetime }}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -434,17 +434,17 @@
                         </div>
 
                         <div class="well">
-                            <h2>Attributes</h2>
+                            <h2>{{ text_attributes }}</h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 1:</label>
+                                        <label>{{ text_attribute1 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute1-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute1-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute1-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute1-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute1-source" >
@@ -456,13 +456,13 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 2:</label>
+                                        <label>{{ text_attribute2 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute2-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute2-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute2-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute2-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute2-source" >
@@ -474,13 +474,13 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 3:</label>
+                                        <label>{{ text_attribute3 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute3-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute3-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute3-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute3-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute3-source" >
@@ -495,13 +495,13 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 4:</label>
+                                        <label>{{ text_attribute4 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute4-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute4-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute4-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute4-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute4-source" >
@@ -513,13 +513,13 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 5:</label>
+                                        <label>{{ text_attribute5 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute5-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute5-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute5-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute5-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute5-source" >
@@ -531,13 +531,13 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 6:</label>
+                                        <label>{{ text_attribute6 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute6-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute6-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute6-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute6-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute6-source" >
@@ -551,13 +551,13 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 7:</label>
+                                        <label>{{ text_attribute7 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute7-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute7-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute7-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute7-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute7-source" >
@@ -569,13 +569,13 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 8:</label>
+                                        <label>{{ text_attribute8 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute8-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute8-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute8-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute8-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute8-source" >
@@ -587,13 +587,13 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 9:</label>
+                                        <label>{{ text_attribute9 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute9-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute9-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute9-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute9-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute9-source" >
@@ -607,13 +607,13 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 10:</label>
+                                        <label>{{ text_attribute10 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute10-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute10-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute10-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute10-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute10-source" >
@@ -625,13 +625,13 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 11:</label>
+                                        <label>{{ text_attribute11 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute11-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute11-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute11-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute11-label" placeholder{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute11-source" >
@@ -643,13 +643,13 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>Attribute 12:</label>
+                                        <label>{{ text_attribute12 }}:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute12-infilter" class="form-control" style="display:inline-block"> filter
+                                            <input type="checkbox" name="attribute12-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute12-label" placeholder="Attribute name">
+                                                <input class="form-control" name="attribute12-label" placeholder="{{ text_attribute_name }}">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute12-source" >
@@ -663,34 +663,41 @@
                         </div>
                                                 
                                                 
-                         <a href="#iss_selector_form_extra" data-toggle="collapse">Extra settings</a>
+                         <a href="#iss_selector_form_extra" data-toggle="collapse">{{ text_extra_settings }}</a>
 
                         <div id="iss_selector_form_extra" class="collapse">
                             <div class="form-group">
-                                <label>Filter delimeters:</label>
-                                <input class="form-control" name="filter_delimeter" placeholder="Filter delimeters">
+                                <label>{{ text_filter_delimiters }}:</label>
+                                <input class="form-control" name="filter_delimeter" placeholder="{{ text_filter_delimiters }}">
                             </div>
                             <div class="form-group">
-                                <label>Parsing mode:</label>
+                                <label>{{ text_parsing_mode }}:</label>
                                 <select name="parsing_mode" class="form-control">
-                                    <option value="detect_unchanged_entries">Import only changed entries</option>
-                                    <option value="import_all">Import changed and unchanged entries</option>
+                                    <option value="detect_unchanged_entries">{{ text_parse_changed_only }}</option>
+                                    <option value="import_all">{{ text_parse_all }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Import of images:</label>
+                                <label>{{ text_delete_absent }}:</label>
+                                <select name="delete_absent_products" class="form-control">
+                                    <option value="yes">{{ text_yes }}</option>
+                                    <option value="">{{ text_no }} ({{ text_default }})</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>{{ text_import_images }}:</label>
                                 <select name="image_mode" class="form-control">
-                                    <option value="only_new_products">Add or download images only for new products (fast)</option>
-                                    <option value="all_products">Add or download images for all products</option>
+                                    <option value="only_new_products">{{ text_images_new_only }}</option>
+                                    <option value="all_products">{{ text_images_all }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>Meta Tag Keyword prefix:</label>
-                                <input class="form-control" name="meta_keyword_prefix" placeholder="Meta Tag keyword prefix">
+                                <label>{{ text_meta_keyword_prefix }}:</label>
+                                <input class="form-control" name="meta_keyword_prefix" placeholder="{{ text_meta_keyword_prefix }}">
                             </div>
                             <div class="form-group">
-                                <label>Meta Tag Description prefix:</label>
-                                <input class="form-control" name="meta_description_prefix" placeholder="Meta Tag description prefix">
+                                <label>{{ text_meta_tag_prefix }}:</label>
+                                <input class="form-control" name="meta_description_prefix" placeholder="{{ text_meta_tag_prefix }}">
                             </div>
                             
                         </div> 
@@ -731,6 +738,7 @@
             location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&user_token={{ user_token }}'; 
         },
         selectParser:function(sync_id){
+            Setup.sync_id = sync_id;
             Setup.adjustActionButtons();
         },
         adjustActionButtons: function () {

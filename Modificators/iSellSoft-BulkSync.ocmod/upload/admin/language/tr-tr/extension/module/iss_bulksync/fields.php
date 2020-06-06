@@ -1,6 +1,4 @@
 <?php		
-$_['heading_title']                =	"IsellSoft Toplu İthalat";
-$_['heading_title_parser']      =	"Kaynak listesi";
 //Text
 $_['text_source_name']          =	"Kaynak adı";
 $_['text_source_settings']      =	"Kaynak ayarları";
@@ -70,11 +68,11 @@ $_['text_attribute11']          =	"Özellik 11";
 $_['text_attribute12']          =	"Özellik 12";
 
 $_['text_extra_settings']       =	"Ek ayarlar";
-$_['text_filter_delimiters']    =	"Filtre sınırlayıcıları";
+$_['text_filter_delimiters']    =	"Filtre sınırlayıcılar";
 $_['text_parsing_mode']         =	"Ayrıştırma modu";
-$_['text_parse_changed_only']   =	"Yalnızca değişmiş girdileri içe aktar";
-$_['text_parse_all']            =	"Değişmiş ve değişmemiş girdileri içe aktar";
-$_['text_delete_absent']            =	"Kaynakta olmayan ürünleri ithalattan sonra sil";
+$_['text_parse_changed_only']   =	"Yalnızca değiştirilmiş girdileri içe aktar";
+$_['text_parse_all']            =	"Değişen ve değişmeyen girdileri içe aktar";
+$_['text_delete_absent']            =	"Delete absent in source products after import";
 
 $_['text_import_images']        =	"Görüntülerin içe aktarılması";
 $_['text_images_new_only']      =	"Yalnızca yeni ürünler için resim eklensin veya indirilsin (hızlı)";
