@@ -1,7 +1,7 @@
 <?php		
 //Heading
-$_['heading_title']          	=	"IsellSoft Массовый импорт";
-$_['heading_title_parser']      =	"Список источников";
+$_['heading_title']          	=	"IsellSoft Bulk sync";
+$_['heading_title_parser']      =	"Source lıst";
 //Text
 $_['text_source_name']          =	"Source Name";
 $_['text_source_settings']      =	"Source settings";
