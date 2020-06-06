@@ -28,7 +28,7 @@ $_['text_filter_group']         =	"Ürün grubuna göre süz...";
 $_['text_entry_category']       =       "Kategori adını giriniz";
 $_['text_product_group']        =	"Ürün grubu";
 $_['text_total_products']      	=	"Toplam ürün";
-$_['text_comission']           	=	"Faiz";
+$_['text_comission']           	=	"Fiyat katsayısı";
 $_['text_dest_cat']            	=	"Hedef kategori";
 
 
