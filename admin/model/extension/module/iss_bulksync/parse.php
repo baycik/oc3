@@ -90,7 +90,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
                 UPDATE
                     iss_sync_entries bse
                         JOIN
-                    iss_tmp_previous_sync bps USING (`sync_id` , `category_lvl1` , `category_lvl2` , `category_lvl3` , `product_name` , `model` , `ean` , `mpn` , `description` , `min_order_size` , `stock_count` , `stock_status` , `manufacturer` , `attribute1` , `attribute2` , `attribute3` , `attribute4` , `attribute5` , `attribute6` , `attribute7` , `attribute8` , `attribute9` , `attribute10`, `attribute11`, `attribute12` ,`attribute_group`, `option1` , `option2` , `option3` , `image` , `image1` , `image2` , `image3` , `image4` , `image5` , `price1` , `price2` , `price3` , `price4`)
+                    iss_tmp_previous_sync bps USING (`sync_id` , `category_lvl1` , `category_lvl2` , `category_lvl3` , `product_name` , `model` , `ean` , `mpn` , `description` , `min_order_size` , `stock_count` , `stock_status` , `manufacturer` , `attribute1` , `attribute2` , `attribute3` , `attribute4` , `attribute5` , `attribute6` , `attribute7` , `attribute8` , `attribute9` , `attribute10`, `attribute11`, `attribute12` ,`attribute_group`, `option1` , `option2` , `option3` , `image` , `image1` , `image2` , `image3` , `image4` , `image5` , `price1`)
                 SET
                     bse.is_changed=0
                 WHERE sync_id='$sync_id'";
