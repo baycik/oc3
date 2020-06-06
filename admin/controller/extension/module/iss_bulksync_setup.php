@@ -6,6 +6,7 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
 
     public function index() {
         $this->load->language('extension/module/iss_bulksync/setup');
+        $this->load->language('extension/module/iss_bulksync/fields');
 
 	$this->document->setTitle($this->language->get('heading_title'));
         
