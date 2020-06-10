@@ -60,7 +60,7 @@
                     <input type="hidden" name="sync_parser_name">
                     <input type="hidden" name="sync_name">
                     {% for parser_id, parser_name in parser_list %}
-                        <button class="btn btn-primary" onclick="$('input[name=sync_parser_name]').val('{{parser_id}}');$('input[name=sync_name]').val('{{parser_name}}');">
+                        <button class="btn btn-secondary" onclick="$('input[name=sync_parser_name]').val('{{parser_id}}');$('input[name=sync_name]').val('{{parser_name}}');">
                             <i class="fa fa-plus"></i>
                             {{ button_add_parser_item }} "{{parser_name}}"
                         </button>
@@ -146,7 +146,7 @@
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <label>{{ text_source_group3 }}: </label>
-                                        <select data-type="source" class="form-control" name="category_lvl2-source" >
+                                        <select data-type="source" class="form-control" name="category_lvl3-source" >
                                             {{ source_column_options }}
                                         </select>
                                     </div>

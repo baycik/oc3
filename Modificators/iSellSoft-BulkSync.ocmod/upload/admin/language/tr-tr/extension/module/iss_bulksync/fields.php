@@ -4,7 +4,7 @@ $_['heading_title_parser']      =	"Kaynak listesi";
 //Text
 $_['text_source_name']          =	"Kaynak adı";
 $_['text_source_settings']      =	"Kaynak ayarları";
-$_['text_source_language']      =	"Kaynak dil";
+$_['text_source_language']      =	"Kaynak dili";
 
 $_['text_grouping']             =	"Gruplama yöntemi";
 $_['text_source_group1']        =	"Kaynak Grubu 1";
@@ -25,7 +25,7 @@ $_['text_width']                =	"Genişlik";
 $_['text_length']               =	"Uzunluk";
 $_['text_height']               =	"Yükseklik";
 
-$_['text_product_data']         =	"Ürün bilgisi";
+$_['text_product_data']         =	"Ürün verileri";
 $_['text_price']                =	"Fiyat";
 $_['text_stock_count']          =	"Stok sayısı";
 $_['text_stock_status']         =	"Stok durumu";
@@ -34,7 +34,7 @@ $_['text_min_order_size']       =	"Asgari sipariş adedi";
 $_['text_images']               =	"Görüntüler";
 $_['text_image_handling']       =	"Görüntü işleme";
 $_['text_image_url_and_source'] =	"Kaynağı dosya adı veya URL olarak kullan";
-$_['text_image_url_only']       =	"Kaynakta belirtilen URL'den yükleme";
+$_['text_image_url_only']       =	"Kaynakta belirtilen URL'den indir";
 $_['text_main_image']           =	"Ana görüntü";
 $_['text_additional_image1']    =	"Ek görüntü 1";
 $_['text_additional_image2']    =	"Ek görüntü 2";
@@ -55,7 +55,7 @@ $_['text_options_time']         =	"Time";
 $_['text_options_datetime']     =	"Date & Time";
 
 $_['text_attributes']           =	"Özellikler";
-$_['text_attribute_name']       =	"Özellik adı";
+$_['text_attribute_name']       =	"Özellik adı|Özellik grubu";
 $_['text_attribute1']           =	"Özellik 1";
 $_['text_attribute2']           =	"Özellik 2";
 $_['text_attribute3']           =	"Özellik 3";

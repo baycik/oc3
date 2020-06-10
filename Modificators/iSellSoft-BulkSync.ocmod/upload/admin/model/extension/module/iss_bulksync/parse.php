@@ -11,7 +11,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
     }
 
     public function initParser($sync_id) {
-        set_time_limit(300);
+        @set_time_limit(300);
         $sync_list_entry = $this->db->query("SELECT * FROM iss_sync_list WHERE sync_id='$sync_id'")->row;
         if (!$sync_list_entry) {
             return false;
@@ -41,8 +41,8 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
         $this->db->query("DROP TEMPORARY TABLE IF EXISTS iss_tmp_previous_sync"); #TEMPORARY
         $this->db->query("CREATE TEMPORARY TABLE iss_tmp_previous_sync AS (SELECT * FROM iss_sync_entries WHERE sync_id='$sync_id')");
 
-        $this->db->query("DROP  TABLE IF EXISTS iss_tmp_current_sync"); #TEMPORARY
-        $this->db->query("CREATE  TABLE iss_tmp_current_sync LIKE iss_sync_entries");
+        $this->db->query("DROP TEMPORARY TABLE IF EXISTS iss_tmp_current_sync"); #TEMPORARY
+        $this->db->query("CREATE TEMPORARY TABLE iss_tmp_current_sync LIKE iss_sync_entries");
     }
 
     private function finish_parsing($sync_id, $mode) {

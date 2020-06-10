@@ -41,7 +41,8 @@ class ModelExtensionModuleIssBulksyncParsersUploadCsv extends ModelExtensionModu
             $row = str_getcsv($csv_row, ';');
             $set = "";
             foreach ($this->sync['sync_config']->sources as $field => $index) {
-                $set .= ", $field='{$row[$index - 1]}'";
+                $value=$this->db->escape($row[$index - 1]);
+                $set .= ", $field='$value'";
             }
             $sql = "
                 INSERT INTO 
