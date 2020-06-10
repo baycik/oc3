@@ -101,7 +101,7 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
 	$pagination->total = $categories_total;
 	$pagination->page = $page;
 	$pagination->limit = $this->config->get('config_limit_admin');
-	$pagination->url = $this->url->link('extension/module/iss_bulksync', $url . '&page={page}', true);
+	$pagination->url = $this->url->link('extension/module/iss_bulksync_import', $url . '&page={page}', true);
 	$data['pagination'] = $pagination->render();
 	$data['results'] = sprintf($this->language->get('text_pagination'), ($categories_total) ? (($page - 1) * $this->config->get('config_limit_admin')) + 1 : 0, ((($page - 1) * $this->config->get('config_limit_admin')) > ($categories_total - $this->config->get('config_limit_admin'))) ?
         $categories_total : ((($page - 1) * $this->config->get('config_limit_admin')) + $this->config->get('config_limit_admin')), $categories_total, ceil($categories_total / $this->config->get('config_limit_admin')));
