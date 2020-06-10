@@ -129,7 +129,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             echo "Skipping deleteAbsentProducts";
             return true;
         }
-        set_time_limit(300);
+        @set_time_limit(300);
         $this->profile("start deleting absent ");
         $sql = "SELECT 
 		    p.product_id,

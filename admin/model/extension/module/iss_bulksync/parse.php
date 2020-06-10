@@ -11,7 +11,7 @@ class ModelExtensionModuleIssBulksyncParse extends Model {
     }
 
     public function initParser($sync_id) {
-        set_time_limit(300);
+        @set_time_limit(300);
         $sync_list_entry = $this->db->query("SELECT * FROM iss_sync_list WHERE sync_id='$sync_id'")->row;
         if (!$sync_list_entry) {
             return false;
