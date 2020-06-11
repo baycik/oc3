@@ -55,6 +55,7 @@ class ModelExtensionModuleIssBulksyncParsersUploadSpreadsheet extends ModelExten
             echo SimpleXLSX::parseError();
         }
         $this->model_tool_upload->deleteUpload($source_file['upload_id']);
+        unlink($filename);
         return true;
     }
 

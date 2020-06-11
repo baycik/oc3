@@ -18,8 +18,12 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         }
         $this->sync_config = json_decode($result->row['sync_config'], false, 512, JSON_UNESCAPED_UNICODE);
         $this->language_id=$this->sync_config->source_language;
-        $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
-        $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
+        if( isset($this->sync_config->meta_keyword_prefix) ){
+            $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
+        }
+        if( isset($this->sync_config->meta_description_prefix) ){
+            $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
+        }
         //header("content-type:text/plain");print_r($this->sync_config);die;
     }
 
@@ -506,7 +510,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         if(empty($url)){
             return null;
         }
-        if( empty($this->sync_config->download_images) ){
+        if( empty($this->sync_config->image_handling) || $this->sync_config->image_handling!='load' ){
             return $this->remoteFileExists($url)?$url:null;
         }
         $ext = pathinfo($url, PATHINFO_EXTENSION);
@@ -613,7 +617,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'product_store' => [$this->store_id],
             'status' => 1
         ];
-        if ( $this->sync_config->image_mode==='all_products' || $product_is_new ) {
+        if ( isset($this->sync_config->image_mode) && $this->sync_config->image_mode==='all_products' || $product_is_new ) {
             $product['image'] =         $this->composeProductImage($row);
             $product['product_image'] = $this->composeProductImageObject($row);
         }

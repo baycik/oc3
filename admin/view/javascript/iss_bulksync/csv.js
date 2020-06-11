@@ -173,6 +173,9 @@ Setup.selectorForm = {
         if (!Setup.sync_id) {
             return;
         }
+        var sync_id=Setup.sync_id;
+        Setup.sync_id=0;
+        Setup.selectorForm.set({});
         var request = {
             route: 'extension/module/iss_bulksync_setup/syncConfigGet',
             sync_id: Setup.sync_id,
@@ -184,6 +187,7 @@ Setup.selectorForm = {
             } catch (e) {
                 console.log(e);
             }
+            Setup.sync_id=sync_id;
             Setup.selectorForm.set(config);
         });
     }
