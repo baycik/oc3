@@ -178,7 +178,7 @@ Setup.selectorForm = {
         Setup.selectorForm.set({});
         var request = {
             route: 'extension/module/iss_bulksync_setup/syncConfigGet',
-            sync_id: Setup.sync_id,
+            sync_id: sync_id,
             user_token: Setup.user_token
         };
         $.get("./", request, function (resp) {

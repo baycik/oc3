@@ -214,7 +214,7 @@
 		return;
 	    }
 	    $.post('index.php?route=extension/module/iss_bulksync_import/importUserProducts&user_token={{ user_token }}', {sync_id: sync_id, group_id: totalCategories.groups[0]}).done(function (ok) {
-		if (ok && totalCategories.total_rows > 0) {
+		if (totalCategories.total_rows > 0) {
 		    current_progress += step_size;
 		    totalCategories.total_rows -= 1;
 		    totalCategories.groups.shift()
@@ -225,8 +225,10 @@
                     current_progress=0;
 		    $('#spinner_icon').hide();
 		    $(".btn-secondary").attr('disabled', null);
-		    alert('{{text_import_failed}}');
 		}
+                if( !ok*1 ){
+                    alert('{{text_import_failed}}');
+                }
 	    }).fail(function(){
                 continueImport(totalCategories);
             });

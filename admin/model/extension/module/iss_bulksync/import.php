@@ -72,6 +72,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
     }
 
     private function importProductGroup($group_data) {
+        @set_time_limit(300);
         $required_field='';
         if( isset($this->sync_config->required_field) ){
             $required_field = " AND {$this->sync_config->required_field} IS NOT NULL  AND {$this->sync_config->required_field}<>'' ";
@@ -492,7 +493,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
 
     private function remoteFileExists($url){
         if( strpos($url, 'http')!==0 ){
-            //http not at the beginning of $url
+            //http not at the beginning of $url this is local file
             return true;
         }
         stream_context_set_default(
@@ -510,7 +511,13 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         if(empty($url)){
             return null;
         }
-        if( empty($this->sync_config->image_handling) || $this->sync_config->image_handling!='load' ){
+        if( empty($this->sync_config->image_handling) || $this->sync_config->image_handling!='load' ){     
+            if( strpos($url, 'http')!==0) {
+                if( strpos($url,'catalog/')!==0 ){
+                    return 'catalog/'.$url;
+                }
+                return $url;
+            }
             return $this->remoteFileExists($url)?$url:null;
         }
         $ext = pathinfo($url, PATHINFO_EXTENSION);
@@ -626,6 +633,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             $product['product_special']=$this->composeProductSpecial($product['price']);
             $product['price']=round($product['price'] * $category_retail_comission * (1-rand(1, $delta_percent)/100), 0);
         }
+        //print_r($product);die;
         return $product;
     }
 
