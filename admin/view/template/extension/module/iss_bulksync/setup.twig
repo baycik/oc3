@@ -698,7 +698,7 @@
                                 <input class="form-control" name="round_to" placeholder="{{ text_round_to }}">
 
                                 <label>{{ text_tax_class }}:</label>
-                                <select data-type="source" class="form-control" name="source_tax_class_id">
+                                <select class="form-control" name="tax_class_id">
                                     <option value="0">-</option>
                                     {% for tax_class in tax_class_list %}
                                     <option value="{{ tax_class.tax_class_id }}">{{ tax_class.title }}</option>

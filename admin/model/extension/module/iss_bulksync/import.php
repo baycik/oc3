@@ -6,6 +6,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
    private $meta_description_prefix="";
    private $round_to=0.01;
    private $tax_class_id=0;
+   private $image_mode='';
     
     public function __construct($registry) {
         parent::__construct($registry);
@@ -29,8 +30,11 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         if( isset($this->sync_config->round_to) ){
             $this->round_to=$this->sync_config->round_to;
         }
-        if( isset($this->sync_config->tax_class) ){
+        if( isset($this->sync_config->tax_class_id) ){
             $this->tax_class_id=$this->sync_config->tax_class_id;
+        }
+        if( isset($this->sync_config->image_mode) ){
+            $this->image_mode=$this->sync_config->image_mode;
         }
         //header("content-type:text/plain");print_r($this->sync_config);die;
     }
@@ -632,7 +636,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'product_store' => [$this->store_id],
             'status' => 1
         ];
-        if ( isset($this->sync_config->image_mode) && $this->sync_config->image_mode==='all_products' || $product_is_new ) {
+        if ( $this->image_mode==='all_products' || $product_is_new ) {
             $product['image'] =         $this->composeProductImage($row);
             $product['product_image'] = $this->composeProductImageObject($row);
         }
