@@ -84,3 +84,5 @@ $_['text_meta_tag_prefix']      =	"Префикс для мета-тэгов";
 $_['text_is_attribute']         =	"Атрибут";
 $_['text_is_filter']            =	"Фильтр";
 
+$_['text_tax_class']         =       "Класс налога";
+$_['text_round_to']             =       "Округлить до (0.01 1.00 5.00)";

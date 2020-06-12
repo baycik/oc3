@@ -86,5 +86,5 @@ $_['text_is_attribute']         =	"Is attribute";
 $_['text_is_filter']            =	"Is filter";
 
 
-$_['text_tax_class_id']         =       "Tax class";
+$_['text_tax_class']         =       "Tax class";
 $_['text_round_to']             =       "Round to (0.01 1.00 5.00)";
