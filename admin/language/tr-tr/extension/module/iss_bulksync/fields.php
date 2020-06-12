@@ -85,3 +85,5 @@ $_['text_meta_tag_prefix']      =	"Meta Açıklaması öneki";
 $_['text_is_attribute']         =	"Özellik";
 $_['text_is_filter']            =	"Filtre";
 
+$_['text_tax_class_id']         =       "Vergi sınıfı";
+$_['text_round_to']             =       "Yuvarlama katsayısı (0.01 1.00 5.00)";

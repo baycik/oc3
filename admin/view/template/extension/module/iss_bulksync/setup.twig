@@ -667,39 +667,44 @@
 
                         <div id="iss_selector_form_extra" class="collapse">
                             <div class="form-group">
-                                <label>{{ text_filter_delimiters }}:</label>
-                                <input class="form-control" name="filter_delimeter" placeholder="{{ text_filter_delimiters }}">
-                            </div>
-                            <div class="form-group">
                                 <label>{{ text_parsing_mode }}:</label>
                                 <select name="parsing_mode" class="form-control">
                                     <option value="detect_unchanged_entries">{{ text_parse_changed_only }}</option>
                                     <option value="import_all">{{ text_parse_all }}</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
                                 <label>{{ text_delete_absent }}:</label>
                                 <select name="delete_absent_products" class="form-control">
                                     <option value="yes">{{ text_yes }}</option>
                                     <option value="">{{ text_no }} ({{ text_default }})</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
                                 <label>{{ text_import_images }}:</label>
                                 <select name="image_mode" class="form-control">
-                                    <option value="only_new_products">{{ text_images_new_only }}</option>
+                                    <option value="">{{ text_images_new_only }} ({{ text_default }})</option>
                                     <option value="all_products">{{ text_images_all }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>{{ text_meta_keyword_prefix }}:</label>
                                 <input class="form-control" name="meta_keyword_prefix" placeholder="{{ text_meta_keyword_prefix }}">
-                            </div>
-                            <div class="form-group">
                                 <label>{{ text_meta_tag_prefix }}:</label>
                                 <input class="form-control" name="meta_description_prefix" placeholder="{{ text_meta_tag_prefix }}">
                             </div>
-                            
+                            <div class="form-group">
+                                <label>{{ text_filter_delimiters }}:</label>
+                                <input class="form-control" name="filter_delimeter" placeholder="{{ text_filter_delimiters }}">
+                            </div>
+                            <div class="form-group">
+                                <label>{{ text_round_to }}:</label>
+                                <input class="form-control" name="round_to" placeholder="{{ text_round_to }}">
+
+                                <label>{{ text_tax_class }}:</label>
+                                <select data-type="source" class="form-control" name="source_tax_class_id">
+                                    <option value="0">-</option>
+                                    {% for tax_class in tax_class_list %}
+                                    <option value="{{ tax_class.tax_class_id }}">{{ tax_class.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div> 
                     </form>
                     <!-- /SELECTOR FORM -->

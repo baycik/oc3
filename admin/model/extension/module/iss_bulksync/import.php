@@ -4,6 +4,8 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
    private $sync_id;
    private $meta_keyword_prefix="";
    private $meta_description_prefix="";
+   private $round_to=0.01;
+   private $tax_class_id=0;
     
     public function __construct($registry) {
         parent::__construct($registry);
@@ -23,6 +25,12 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         }
         if( isset($this->sync_config->meta_description_prefix) ){
             $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
+        }
+        if( isset($this->sync_config->round_to) ){
+            $this->round_to=$this->sync_config->round_to;
+        }
+        if( isset($this->sync_config->tax_class) ){
+            $this->tax_class_id=$this->sync_config->tax_class_id;
         }
         //header("content-type:text/plain");print_r($this->sync_config);die;
     }
@@ -601,7 +609,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'minimum' => $row['min_order_size'],
             'subtract' => '',
             'date_available' => '',
-            'price' => round($row['price'] * $category_comission, 0),
+            'price' => round($row['price'] * $category_comission / $this->round_to, 0) * $this->round_to,
             'points' => $row['points'],
             'weight' => $row['weight'],
             'weight_class_id' => 0,
@@ -609,7 +617,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'width' => $row['width'],
             'height' => $row['height'],
             'length_class_id' => 0,
-            'tax_class_id' => 0,
+            'tax_class_id' => $this->tax_class_id,
             'sort_order' => $sort_order,
             'name' => $row['product_name'],
             'manufacturer_id' => $this->composeProductManufacturer($row['manufacturer']),

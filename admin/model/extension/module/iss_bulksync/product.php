@@ -116,7 +116,7 @@ class ModelExtensionModuleIssBulksyncProduct extends ModelCatalogProduct {
                 continue;
             }
             //print_r($old_property_ids);
-            $this->db->query("INSERT INTO $table SET product_id = '" . (int) $product_id . "', $property_id_field = '" . (int) $property_id . "'");
+            $this->db->query("INSERT IGNORE INTO $table SET product_id = '" . (int) $product_id . "', $property_id_field = '" . (int) $property_id . "'");
         }
         if (count($old_property_ids) > 0) {
             $ids = implode(',', $old_property_ids);
