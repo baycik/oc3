@@ -15,8 +15,12 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
                
 	$url = '';
         
+        if(!empty($this->session->data['token'])){
+            $this->session->data['user_token'] = $this->session->data['token'];
+        }
+        
 	$data['breadcrumbs'] = array();
-
+        
 	$data['breadcrumbs'][] = array(
                 'text' => $this->language->get('text_home'),
                 'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)

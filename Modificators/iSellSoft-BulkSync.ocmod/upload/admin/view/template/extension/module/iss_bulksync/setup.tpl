@@ -26,131 +26,131 @@
     }
 
 </style>
-{{ header }}{{ column_left }}
+<?php echo $header; ?><?php echo $column_left; ?>
 <div id="content">
     <div class="page-header">
         <div class="container-fluid">
 
-            <h1>{{ heading_title }}</h1>
+            <h1><?php echo $heading_title; ?></h1>
             <ul class="breadcrumb">
-                {% for breadcrumb in breadcrumbs %}
-                    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
-                    {% endfor %}
+                <?php foreach ($breadcrumbs as $breadcrumb){ ?>
+                    <li><a href="<?php echo $breadcrumb['href']; ?>"><?php echo $breadcrumb['text']; ?></a></li>
+                <?php } ?> 
             </ul>
         </div>
     </div>
     <div class="successdiv">
-        {% if success %}
-            <div class="alert alert-success"><i class="fa fa-check-circle"></i> {{ success }}</div>
-        {% endif %}
+        <?php if(isset($success)){ ?>
+            <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?></div>
+        <?php } ?>
     </div>
     <div class="errordiv">
-        {% if error_warning %}
-            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}</div>
-        {% endif %}
+        <?php if(isset($error_warning)){ ?>
+            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?></div>
+        <?php } ?>
     </div>
 
     <div class="container-fluid">
-        <div id="content" class="panel panel-default">{{ content_top }}
+        <div id="content" class="panel panel-default"><?php echo $content_top; ?>
             <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_add_parser_title }}</h3>
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $language['text_add_parser_title']; ?></h3>
             </div>
             <div class="panel-body">
-                <form action="index.php?route=extension/module/iss_bulksync_setup/addparser&user_token={{ user_token }}" method="post">
+                <form action="index.php?route=extension/module/iss_bulksync_setup/addparser&token=<?php echo $token; ?>" method="post">
                     <input type="hidden" name="sync_parser_name">
                     <input type="hidden" name="sync_name">
-                    {% for parser_id, parser_name in parser_list %}
-                        <button class="btn btn-secondary" onclick="$('input[name=sync_parser_name]').val('{{parser_id}}');$('input[name=sync_name]').val('{{parser_name}}');">
+                    <?php foreach($parser_list as  $parser_id => $parser_name) { ?>
+                        <button class="btn btn-primary" onclick="$('input[name=sync_parser_name]').val('<?php echo $parser_id; ?>');$('input[name=sync_name]').val('<?php echo $parser_name; ?>');">
                             <i class="fa fa-plus"></i>
-                            {{ button_add_parser_item }} "{{parser_name}}"
+                            <?php echo $language['button_add_parser_item']; ?> "<?php echo $parser_name; ?>"
                         </button>
-                    {% endfor %}
+                    <?php } ?>
                 </form>
-                {% if  sync_list  %}
+                <?php if(!empty($sync_list)){ ?>
                     <div class="panel-body">
                         <form id='form-parse'>
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
-                                        <label>{{ text_select_parser }}</label>
+                                        <label><?php echo $language['text_select_parser']; ?></label>
                                         <select data-type="source" class="form-control"  >
-                                            {% for sync in sync_list %}
-                                                <option value="{{sync.sync_id}}" data-sync_parser_name="{{sync.sync_parser_name}}" data-sync_name="{{sync.sync_name}}">
-                                                    {% if  sync.sync_last_started %} 
-                                                        {{sync.sync_name}} ({{text_last_download}}: {{sync.sync_last_started}})
-                                                    {% else %}
-                                                        {{sync.sync_name}} ({{text_was_no_download}})
-                                                    {% endif %}
+                                            <?php foreach($sync_list as  $sync) { ?>
+                                                <option value="<?php echo $sync['sync_id']; ?>" data-sync_parser_name="<?php echo $sync['sync_parser_name']; ?>" data-sync_name="<?php echo $sync['sync_name']; ?>">
+                                                    <?php if(!empty($sync['sync_last_started'])){ ?>
+                                                        <?php echo $sync['sync_name']; ?> (<?php echo $language['text_last_download']; ?>: <?php echo $sync['sync_last_started']; ?>)
+                                                    <?php } else { ?>
+                                                        <?php echo $sync['sync_name']; ?> (<?php echo $language['text_was_no_download']; ?>)
+                                                    <?php } ?>
                                                 </option>
-                                            {% endfor %}
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="but col" > 
-                                    <button type="button" class="btn btn-primary btn-upload-positive" style="width:50%"><i class="fa fa-upload"></i> {{button_parse}}</button>
-                                    <button type="submit" class="btn btn-primary btn-download-positive" style="width:50%"><i class="fa fa-download"></i> {{button_parse}}</button>
-                                    <button type="button" class="btn btn-default btn-secondary"><i class="fa fa-eye"></i> {{ button_open_parser }}</button>
+                                    <button type="button" class="btn btn-primary btn-upload-positive" style="width:50%"><i class="fa fa-upload"></i> <?php echo $language['button_parse']; ?></button>
+                                    <button type="submit" class="btn btn-primary btn-download-positive" style="width:50%"><i class="fa fa-download"></i> <?php echo $language['button_parse']; ?></button>
+                                    <button type="button" class="btn btn-default btn-secondary"><i class="fa fa-eye"></i> <?php echo $language['button_open_parser']; ?></button>
                                     <button type="button" class="btn btn-danger"><i class="fa fa-trash-o"></i></button>
                                 </div>
                             </div>    
                         </form>
                     </div>
-                {% endif %}
+                <?php } ?>
                 <div class="panel-body"  id="iss_selector_panel" style="display:none">
                     <!-- SELECTOR FORM -->
                     <form id="iss_selector_form">
                         <div class="well">
-                            <h2>{{ text_source_settings }}</h2>
+                            <h2><?php echo $language['text_source_settings']; ?></h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_source_name }}: </label>
-                                        <input class="form-control" name="sync_name" placeholder="{{ text_source_name }}" required="required">
+                                        <label><?php echo $language['text_source_name']; ?>: </label>
+                                        <input class="form-control" name="sync_name" placeholder="<?php echo $language['text_source_name']; ?>" required="required">
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_source_language }}: </label>
+                                        <label><?php echo $language['text_source_language']; ?>: </label>
                                         <select data-type="source" class="form-control" name="source_language" required="required">
-                                            {% for lang in language_list %}
-                                            <option value="{{ lang.language_id }}">{{ lang.name }}</option>
-                                            {% endfor %}
+                                            <?php foreach($language_list as  $lang) { ?>
+                                            <option value="<?php echo $lang['language_id']; ?>"><?php echo $lang['name']; ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_source_file }}: </label>
-                                        <input class="form-control" name="source_file" placeholder="{{ text_source_file }}">
+                                        <label><?php echo $language['text_source_file']; ?>: </label>
+                                        <input class="form-control" name="source_file" placeholder="<?php echo $language['text_source_file']; ?>">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="well">
-                            <h2>{{ text_grouping }}</h2>
+                            <h2><?php echo $language['text_grouping']; ?></h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_source_group1 }}: </label>
+                                        <label><?php echo $language['text_source_group1']; ?>: </label>
                                         <select data-type="source" class="form-control" name="category_lvl1-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_source_group2 }}: </label>
+                                        <label><?php echo $language['text_source_group2']; ?>: </label>
                                         <select data-type="source" class="form-control" name="category_lvl2-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_source_group3 }}: </label>
+                                        <label><?php echo $language['text_source_group3']; ?>: </label>
                                         <select data-type="source" class="form-control" name="category_lvl3-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -158,29 +158,29 @@
                         </div>
 
                         <div class="well">
-                            <h2>{{ text_product_general_info }}</h2>
+                            <h2><?php echo $language['text_product_general_info']; ?></h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_model }}: </label>
+                                        <label><?php echo $language['text_model']; ?>: </label>
                                         <select data-type="source" class="form-control" name="model-source"  required="required">
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_name }}: </label>
+                                        <label><?php echo $language['text_name']; ?>: </label>
                                         <select data-type="source" class="form-control" name="product_name-source"  required="required">
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_description }}: </label>
+                                        <label><?php echo $language['text_description']; ?>: </label>
                                         <select data-type="source" class="form-control" name="description-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -188,32 +188,32 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_manufacturer }}: </label>
+                                        <label><?php echo $language['text_manufacturer']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="manufacturer-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
-                                            <input type="checkbox" name="manufacturer-infilter" class="form-control" style="display:inline-block;"> {{ text_is_filter }}
+                                            <input type="checkbox" name="manufacturer-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
+                                            <input type="checkbox" name="manufacturer-infilter" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="manufacturer-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_tag }}: </label>
+                                        <label><?php echo $language['text_tag']; ?>: </label>
                                         <select data-type="source" class="form-control" name="tag-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_points }}: </label>
+                                        <label><?php echo $language['text_points']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="points-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="points-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="points-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -221,34 +221,34 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_ean }}: </label>
+                                        <label><?php echo $language['text_ean']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="ean-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="ean-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="ean-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_mpn }}: </label>
+                                        <label><?php echo $language['text_mpn']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="mpn-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="mpn-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="mpn-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_weight }}: </label>
+                                        <label><?php echo $language['text_weight']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="weight-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="weight-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="weight-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -256,34 +256,34 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_width }}: </label>
+                                        <label><?php echo $language['text_width']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="width-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="width-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="width-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_length }}: </label>
+                                        <label><?php echo $language['text_length']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="length-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="length-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="length-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_height }}: </label>
+                                        <label><?php echo $language['text_height']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="height-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
+                                            <input type="checkbox" name="height-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="height-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -291,45 +291,45 @@
                             </div>
                         </div>
                         <div class="well">
-                            <h2>{{ text_product_data }}</h2>
+                            <h2><?php echo $language['text_product_data']; ?></h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_price }}: </label>
+                                        <label><?php echo $language['text_price']; ?>: </label>
                                         <select data-type="source" class="form-control" name="price1-source" required="required">
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_stock_count }}: </label>
+                                        <label><?php echo $language['text_stock_count']; ?>: </label>
                                         <select data-type="source" class="form-control" name="stock_count-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_stock_status }}: </label>
+                                        <label><?php echo $language['text_stock_status']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="stock_status-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
-                                            <input type="checkbox" name="stock_status-infilter" class="form-control" style="display:inline-block;"> {{ text_is_filter }}
+                                            <input type="checkbox" name="stock_status-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
+                                            <input type="checkbox" name="stock_status-infilter" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="stock_status-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_min_order_size }}: </label>
+                                        <label><?php echo $language['text_min_order_size']; ?>: </label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="min_order_size-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}
-                                            <input type="checkbox" name="min_order_size-infilter" class="form-control" style="display:inline-block;"> {{ text_is_filter }}
+                                            <input type="checkbox" name="min_order_size-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>
+                                            <input type="checkbox" name="min_order_size-infilter" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="min_order_size-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -337,14 +337,14 @@
                         </div>
 
                         <div class="well">
-                            <h2>{{ text_images }}</h2>
+                            <h2><?php echo $language['text_images']; ?></h2>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <label>{{ text_image_handling }}: </label>
+                                        <label><?php echo $language['text_image_handling']; ?>: </label>
                                         <select data-type="source" class="form-control" name="image_handling" >
-                                            <option value="use">{{ text_image_url_and_source }}</option>
-                                            <option value="load">{{ text_image_url_only }}</option>
+                                            <option value="use"><?php echo $language['text_image_url_and_source']; ?></option>
+                                            <option value="load"><?php echo $language['text_image_url_only']; ?></option>
                                         </select>
                                     </div>
                                 </div>
@@ -352,25 +352,25 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_main_image }}: </label>
+                                        <label><?php echo $language['text_main_image']; ?>: </label>
                                         <select data-type="source" class="form-control" name="image-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_additional_image1 }}: </label>
+                                        <label><?php echo $language['text_additional_image1']; ?>: </label>
                                         <select data-type="source" class="form-control" name="image1-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_additional_image2 }}: </label>
+                                        <label><?php echo $language['text_additional_image2']; ?>: </label>
                                         <select data-type="source" class="form-control" name="image2-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -378,25 +378,25 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_additional_image3 }}: </label>
+                                        <label><?php echo $language['text_additional_image3']; ?>: </label>
                                         <select data-type="source" class="form-control" name="image3-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_additional_image4 }}: </label>
+                                        <label><?php echo $language['text_additional_image4']; ?>: </label>
                                         <select data-type="source" class="form-control" name="image4-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_additional_image5 }}: </label>
+                                        <label><?php echo $language['text_additional_image5']; ?>: </label>
                                         <select data-type="source" class="form-control" name="image5-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div>
                                 </div>
@@ -404,30 +404,30 @@
                         </div>
 
                         <div class="well">
-                            <h2>{{ text_options }}</h2>
+                            <h2><?php echo $language['text_options']; ?></h2>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>{{ text_option }}:</label>
+                                        <label><?php echo $language['text_option']; ?>:</label>
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                <input class="form-control" name="option1-label" placeholder="{{ text_option_name }}">
+                                                <input class="form-control" name="option1-label" placeholder="<?php echo $language['text_option_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="option1-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>  
                                             <div class="col-sm-4">
                                                 <select class="form-control" name="option1-selectortype" >
-                                                    <option value="select">{{ text_options_select }}</option>
-                                                    <option value="radio">{{ text_options_radio }}</option>
-                                                    <option value="checkbox">{{ text_options_checkbox }}</option>
-                                                    <option value="text">{{ text_options_text }}</option>
-                                                    <option value="file">{{ text_options_file }}</option>
-                                                    <option value="date">{{ text_options_date }}</option>
-                                                    <option value="time">{{ text_options_time }}</option>
-                                                    <option value="datetime">{{ text_options_datetime }}</option>
+                                                    <option value="select"><?php echo $language['text_options_select']; ?></option>
+                                                    <option value="radio"><?php echo $language['text_options_radio']; ?></option>
+                                                    <option value="checkbox"><?php echo $language['text_options_checkbox']; ?></option>
+                                                    <option value="text"><?php echo $language['text_options_text']; ?></option>
+                                                    <option value="file"><?php echo $language['text_options_file']; ?></option>
+                                                    <option value="date"><?php echo $language['text_options_date']; ?></option>
+                                                    <option value="time"><?php echo $language['text_options_time']; ?></option>
+                                                    <option value="datetime"><?php echo $language['text_options_datetime']; ?></option>
                                                 </select>
                                             </div>
                                         </div>
@@ -437,21 +437,21 @@
                         </div>
 
                         <div class="well">
-                            <h2>{{ text_attributes }}</h2>
+                            <h2><?php echo $language['text_attributes']; ?></h2>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute1 }}:</label>
+                                        <label><?php echo $language['text_attribute1']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute1-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute1-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute1-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute1-label" placeholder="<?php echo $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute1-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -459,17 +459,17 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute2 }}:</label>
+                                        <label><?php echo $language['text_attribute2']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute2-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute2-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute2-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute2-label" placeholder="<?php echo $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute2-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -477,17 +477,17 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute3 }}:</label>
+                                        <label><?php echo $language['text_attribute3']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute3-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute3-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute3-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute3-label" placeholder="<?php echo $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute3-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -498,17 +498,17 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute4 }}:</label>
+                                        <label><?php echo $language['text_attribute4']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute4-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute4-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute4-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute4-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute4-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -516,17 +516,17 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute5 }}:</label>
+                                        <label><?php echo $language['text_attribute5']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute5-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute5-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute5-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute5-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute5-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -534,17 +534,17 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute6 }}:</label>
+                                        <label><?php echo $language['text_attribute6']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute6-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute6-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute6-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute6-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute6-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -554,17 +554,17 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute7 }}:</label>
+                                        <label><?php echo $language['text_attribute7']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute7-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute7-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute7-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute7-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute7-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -572,17 +572,17 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute8 }}:</label>
+                                        <label><?php echo $language['text_attribute8']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute8-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute8-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute8-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute8-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute8-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -590,17 +590,17 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute9 }}:</label>
+                                        <label><?php echo $language['text_attribute9']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute9-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute9-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute9-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute9-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute9-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -610,17 +610,17 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute10 }}:</label>
+                                        <label><?php echo $language['text_attribute10']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute10-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute10-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute10-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute10-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute10-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -628,17 +628,17 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute11 }}:</label>
+                                        <label><?php echo $language['text_attribute11']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute11-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute11-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute11-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute11-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute11-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -646,89 +646,89 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label>{{ text_attribute12 }}:</label>
+                                        <label><?php echo $language['text_attribute12']; ?>:</label>
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute12-infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute12-infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-8">
-                                                <input class="form-control" name="attribute12-label" placeholder="{{ text_attribute_name }}">
+                                                <input class="form-control" name="attribute12-label" placeholder="<?php echo  $language['text_attribute_name']; ?>">
                                             </div>
                                             <div class="col-sm-4">
                                                 <select data-type="source" class="form-control" name="attribute12-source" >
-                                                    {{ source_column_options }}
+                                                    <?php echo $source_column_options; ?>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                    
-                            <h2>{{ text_attribute_group }}</h2>
+                            </div>  
+                            <h2><?php echo $language['text_attribute_group']; ?></h2>
                             <div class="row">
                                 <div class="col-sm-8">
                                     <div class="form-group">
-                                        <label>{{ text_attribute_group_template }}</label>
+                                        <label><?php echo $language['text_attribute_group_template']; ?>:</label>
                                         <div class="row">
                                             <div class="col-sm-12">
-                                                <input class="form-control" name="attribute_group-label" placeholder="{{ text_attribute_group_placeholder }}">
-                        </div>
+                                                <input class="form-control" name="attribute_group-label" placeholder="<?php echo  $language['text_attribute_group_placeholder']; ?>">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
                                         <div style="float: right">
-                                            <input type="checkbox" name="attribute_group-group_infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                            <input type="checkbox" name="attribute_group-group_infilter" class="form-control" style="display:inline-block"> <?php echo $language['text_is_filter']; ?>
                                         </div>
                                         <select data-type="source" class="form-control" name="attribute_group-source" >
-                                            {{ source_column_options }}
+                                            <?php echo $source_column_options; ?>
                                         </select>
                                     </div> 
                                 </div> 
-                            </div>                     
+                            </div>  
                         </div>
                                                 
                                                 
-                         <a href="#iss_selector_form_extra" data-toggle="collapse">{{ text_extra_settings }}</a>
+                         <a href="#iss_selector_form_extra" data-toggle="collapse"><?php echo $language['text_extra_settings']; ?></a>
 
                         <div id="iss_selector_form_extra" class="collapse">
                             <div class="form-group">
-                                <label>{{ text_parsing_mode }}:</label>
+                                <label><?php echo $language['text_parsing_mode']; ?>:</label>
                                 <select name="parsing_mode" class="form-control">
-                                    <option value="detect_unchanged_entries">{{ text_parse_changed_only }}</option>
-                                    <option value="import_all">{{ text_parse_all }}</option>
+                                    <option value="detect_unchanged_entries"><?php echo $language['text_parse_changed_only']; ?></option>
+                                    <option value="import_all"><?php echo $language['text_parse_all']; ?></option>
                                 </select>
-                                <label>{{ text_delete_absent }}:</label>
+                                <label><?php echo $language['text_delete_absent']; ?>:</label>
                                 <select name="delete_absent_products" class="form-control">
-                                    <option value="yes">{{ text_yes }}</option>
-                                    <option value="">{{ text_no }} ({{ text_default }})</option>
+                                    <option value="yes"><?php echo $language['text_yes']; ?></option>
+                                    <option value=""><?php echo $language['text_no']; ?> (<?php echo $language['text_default']; ?>)</option>
                                 </select>
-                                <label>{{ text_import_images }}:</label>
+                                <label><?php echo $language['text_import_images']; ?>:</label>
                                 <select name="image_mode" class="form-control">
-                                    <option value="">{{ text_images_new_only }} ({{ text_default }})</option>
-                                    <option value="all_products">{{ text_images_all }}</option>
+                                    <option value=""><?php echo $language['text_images_new_only'].' ('.$language['text_default'].')'; ?></option>
+                                    <option value="all_products"><?php echo $language['text_images_all']; ?></option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>{{ text_meta_keyword_prefix }}:</label>
-                                <input class="form-control" name="meta_keyword_prefix" placeholder="{{ text_meta_keyword_prefix }}">
-                                <label>{{ text_meta_tag_prefix }}:</label>
-                                <input class="form-control" name="meta_description_prefix" placeholder="{{ text_meta_tag_prefix }}">
+                                <label><?php echo $language['text_meta_keyword_prefix']; ?>:</label>
+                                <input class="form-control" name="meta_keyword_prefix" placeholder="<?php echo $language['text_meta_keyword_prefix']; ?>">
+                                <label><?php echo $language['text_meta_tag_prefix']; ?>:</label>
+                                <input class="form-control" name="meta_description_prefix" placeholder="<?php echo $language['text_meta_tag_prefix']; ?>">
                             </div>
                             <div class="form-group">
-                                <label>{{ text_filter_delimiters }}:</label>
-                                <input class="form-control" name="filter_delimeter" placeholder="{{ text_filter_delimiters }}">
+                                <label><?php echo $language['text_filter_delimiters']; ?>:</label>
+                                <input class="form-control" name="filter_delimeter" placeholder="<?php echo $language['text_filter_delimiters']; ?>">
                             </div>
                             <div class="form-group">
-                                <label>{{ text_round_to }}:</label>
-                                <input class="form-control" name="round_to" placeholder="{{ text_round_to }}">
+                                <label><?php echo $language['text_round_to']; ?>:</label>
+                                <input class="form-control" name="round_to" placeholder="<?php echo $language['text_round_to']; ?>">
 
-                                <label>{{ text_tax_class }}:</label>
-                                <select class="form-control" name="tax_class_id">
+                                <label><?php echo $language['text_tax_class']; ?>:</label>
+                                <select data-type="source" class="form-control" name="source_tax_class_id">
                                     <option value="0">-</option>
-                                    {% for tax_class in tax_class_list %}
-                                    <option value="{{ tax_class.tax_class_id }}">{{ tax_class.title }}</option>
-                                    {% endfor %}
+                                    <?php  foreach($tax_class_list as $tax_class) { ?>
+                                    <option value="<?php echo $tax_class['tax_class_id']; ?>"><?php echo $tax_class['title']; ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div> 
@@ -736,9 +736,9 @@
                     <!-- /SELECTOR FORM -->
                 </div>
             </div>
-            {{ content_bottom }}
+            <?php echo $content_bottom; ?>
         </div>
-        {{ column_right }}
+        <?php echo $column_right; ?>
     </div>
 </div>
 <script type="text/javascript">
@@ -746,9 +746,6 @@
         init: function () {
             Setup.adjustActionButtons();
             Setup.adjustActions();
-            $("#form-parse .btn-primary").click(function () {
-                Setup.startParsing();
-            });
             $("#form-parse .btn-secondary").click(function () {
                 Setup.openImport();
             });
@@ -760,14 +757,24 @@
             $(".btn.btn-upload-positive").click(Setup.upload_file);
         },
         sync_id: 0,
-        user_token: '{{ user_token }}',
-        token_name: '{{ token_name }}',
-        startParsing:function(){
-            
+        token: '<?php echo $token; ?>',
+        source_url: '',
+        startParsing:function(request){
+            $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&token=<?php echo $token; ?>', request, function (ok) {
+                Setup.syncing_in_progress = false;
+                if (ok * 1) {
+                    alert('<?php echo $language["text_loading_completed"]; ?>');
+                    $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i><?php echo $button_parse_completed; ?>');
+                    location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&token=<?php echo $token; ?>';
+                } else {
+                    $("#form-parse .btn-download-positive").html('<?php echo $button_parse; ?>');
+                    alert("<?php echo $language['text_error_while_parsing']; ?>: " + ok);
+                }
+            });
         },
         openImport:function(){
             Setup.sync_id = $('#form-parse select').val();
-            location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&user_token={{ user_token }}'; 
+            location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&token=<?php echo $token; ?>'; 
         },
         selectParser:function(sync_id){
             Setup.sync_id = sync_id;
@@ -796,9 +803,9 @@
             Setup.sync_id = $('#form-parse select').val();
             $('#form-parse select').on('change', Setup.adjustActionButtons);
             $("#form-parse .btn-danger").click(function () {
-                if (confirm("{{text_delete_parser}}")) {
+                if (confirm("<?php echo $language['text_delete_parser']; ?>")) {
                     Setup.sync_id = $('#form-parse select').val();
-                    $.post('index.php?route=extension/module/iss_bulksync_setup/deleteparser&user_token={{ user_token }}', {sync_id: Setup.sync_id}, function (ok) {
+                    $.post('index.php?route=extension/module/iss_bulksync_setup/deleteparser&token=<?php echo $token; ?>', {sync_id: Setup.sync_id}, function (ok) {
                         location.reload();
                     });
                 }
@@ -810,16 +817,16 @@
                     return;
                 }
                 Setup.syncing_in_progress = true;
-                $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parsing}}');
+                $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i><?php echo $button_parsing; ?>');
                 e.preventDefault();
-                $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&user_token={{ user_token }}', {sync_id: Setup.sync_id}, function (ok) {
+                $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&token=<?php echo $token; ?>', {sync_id: Setup.sync_id}, function (ok) {
                     Setup.syncing_in_progress = false
                     if (ok * 1) {
-                        //alert('{{text_loading_completed}}');
-                        $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
-                        location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&user_token={{ user_token }}';
+                        //alert('<?php echo $language['text_loading_completed']; ?>');
+                        $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i><?php echo $button_parse_completed; ?>');
+                        location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&token=<?php echo $token; ?>';
                     } else {
-                        $("#form-parse .btn-download-positive").html('{{button_parse}}');
+                        $("#form-parse .btn-download-positive").html('<?php echo $button_parse; ?>');
                         alert("Error occured: " + ok);
                     }
                 });
@@ -828,6 +835,15 @@
         timer:0,
         upload_file:function(){
             if( !Setup.selectorForm.save() ){
+                return false;
+            }
+            Setup.source_url = $('input[name="source_file"]').val();
+            if(Setup.source_url){
+                Setup.sync_id = $("#form-parse").find('select').val();
+                var request={
+                    sync_id: Setup.sync_id
+                };
+                Setup.startParsing(request);
                 return false;
             }
             var element = this;
@@ -839,7 +855,7 @@
                 if ($('#form-upload input[name=\'file\']').val() !== '') {
                     clearInterval(Setup.timer);
                     $.ajax({
-                        url: 'index.php?route=tool/upload/upload&user_token={{ user_token }}',
+                        url: 'index.php?route=tool/upload/upload&token=<?php echo $token; ?>',
                         type: 'post',
                         dataType: 'json',
                         data: new FormData($('#form-upload')[0]),
@@ -863,17 +879,7 @@
                                     sync_id: Setup.sync_id,
                                     code: json['code']
                                 };
-                                $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&user_token={{ user_token }}', request, function (ok) {
-                                    Setup.syncing_in_progress = false;
-                                    if (ok * 1) {
-                                        alert('{{ text_loading_completed }}');
-                                        $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i>{{button_parse_completed}}');
-                                        location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&user_token={{ user_token }}';
-                                    } else {
-                                        $("#form-parse .btn-download-positive").html('{{button_parse}}');
-                                        alert("{{ text_error_while_parsing }}: " + ok);
-                                    }
-                                });
+                                Setup.startParsing(request);
                             }
                         },
                         error: function (xhr, ajaxOptions, thrownError) {
@@ -887,4 +893,4 @@
     $(document).on('ready', Setup.init);
 </script>
 <script type="text/javascript" src="view/javascript/iss_bulksync/csv.js"></script>
-{{ footer }}
+<?php echo $footer; ?>

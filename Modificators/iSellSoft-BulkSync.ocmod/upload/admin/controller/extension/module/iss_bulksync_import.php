@@ -5,6 +5,11 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
     private $error = array();
 
     public function index() {
+        
+        if(!empty($this->session->data['token'])){
+            $this->session->data['user_token'] = $this->session->data['token'];
+        }
+        
 	$url = '&user_token=' . $this->session->data['user_token'] ;
         if ( isset($this->request->get['sync_id']) ) {
             $sync_id=$this->request->get['sync_id'];
