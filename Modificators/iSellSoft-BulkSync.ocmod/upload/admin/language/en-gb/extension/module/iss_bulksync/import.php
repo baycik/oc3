@@ -19,9 +19,9 @@ $_['text_no']           	=	"No";
 
 $_['text_confirm']          	=	"Start import products?";
 $_['text_import_starting']      =	"Import is starting...";
-$_['text_import_progress']      =	"Working on import. Products left: ";
+$_['text_import_progress']      =	"Working on import. Products processed: ";
 $_['text_import_finished']      =	"Import is finished successfully!";
-$_['text_import_failed']        =	"Import is failed!";
+$_['text_import_failed']        =	"Import of category not finished!";
 $_['text_delete_absent']        =	"Deleting absent products";
 $_['text_save_setting_failed']  =	"Settings save failed!";
 $_['text_filter_group']         =	"Filter by product group...";

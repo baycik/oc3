@@ -6,6 +6,7 @@ $_['heading_title_parser']      =	"Список источников";
 $_['text_source_name']          =	"Название источника";
 $_['text_source_settings']      =	"Настройки источника";
 $_['text_source_language']      =	"Язык источника";
+$_['text_source_file']          =	"URL источника";
 
 $_['text_grouping']             =	"Группировка";
 $_['text_source_group1']        =	"Группа 1";
@@ -70,11 +71,17 @@ $_['text_attribute10']          =	"Атрибут 10";
 $_['text_attribute11']          =	"Атрибут 11";
 $_['text_attribute12']          =	"Атрибут 12";
 
+$_['text_attribute_group']          =	"Группа атрибутов";
+$_['text_attribute_group_template']          =	"Шаблон группы атрибутов";
+$_['text_attribute_group_placeholder']       =	"Название атрибута|Название группы атрибутов,Название атрибута|Название группы атрибутов,Название атрибута|Название группы атрибутов...";
+
 $_['text_extra_settings']       =	"Дополнительные настройки";
 $_['text_filter_delimiters']    =	"Разделители фильтров";
 $_['text_parsing_mode']         =	"Метод парсинга";
 $_['text_parse_changed_only']   =	"Загружать только изменённые товары";
 $_['text_parse_all']            =	"Загружать все товары";
+$_['text_delete_absent']            =	"Удалить с сайта товары, отсутствующие в загружаемом источнике";
+
 $_['text_import_images']        =	"Загрузка изображений";
 $_['text_images_new_only']      =	"Загружать картинки только для изменённых товаров (быстрее)";
 $_['text_images_all']           =	"Загружать картинки для всех товаров (медленнее)";
@@ -84,5 +91,5 @@ $_['text_meta_tag_prefix']      =	"Префикс для мета-тэгов";
 $_['text_is_attribute']         =	"Атрибут";
 $_['text_is_filter']            =	"Фильтр";
 
-$_['text_tax_class']         =       "Класс налога";
+$_['text_tax_class']            =       "Класс налога";
 $_['text_round_to']             =       "Округлить до (0.01 1.00 5.00)";

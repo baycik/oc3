@@ -6,6 +6,7 @@ $_['heading_title_parser']      =	"Source lıst";
 $_['text_source_name']          =	"Source Name";
 $_['text_source_settings']      =	"Source settings";
 $_['text_source_language']      =	"Source Language";
+$_['text_source_file']          =	"File Url";
 
 $_['text_grouping']             =	"Grouping";
 $_['text_source_group1']        =	"Source Group 1";
@@ -70,12 +71,17 @@ $_['text_attribute10']          =	"Attibute 10";
 $_['text_attribute11']          =	"Attibute 11";
 $_['text_attribute12']          =	"Attibute 12";
 
+$_['text_attribute_group']          =	"Attribute Group";
+$_['text_attribute_group_template']          =	"Attribute group template";
+$_['text_attribute_group_placeholder']       =	"Attibute name|Attibute group,Attibute name|Attibute group,Attibute name|Attibute group...";
+
 $_['text_extra_settings']       =	"Extra settings";
 $_['text_filter_delimiters']    =	"Filter delimiters";
 $_['text_parsing_mode']         =	"Parsing mode";
 $_['text_parse_changed_only']   =	"Import only changed entries";
 $_['text_parse_all']            =	"Import changed and unchanged entries";
 $_['text_delete_absent']            =	"Delete absent in sources products after import";
+
 $_['text_import_images']        =	"Import of images";
 $_['text_images_new_only']      =	"Add or download images only for new products (fast)";
 $_['text_images_all']           =	"Add or download images for all products";
@@ -84,4 +90,7 @@ $_['text_meta_tag_prefix']      =	"Meta Tag Description prefix";
 
 $_['text_is_attribute']         =	"Is attribute";
 $_['text_is_filter']            =	"Is filter";
+
+$_['text_tax_class']         =       "Tax class";
+$_['text_round_to']             =       "Round to (0.01 1.00 5.00)";
 

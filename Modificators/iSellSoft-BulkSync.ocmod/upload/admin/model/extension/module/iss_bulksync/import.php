@@ -1,9 +1,11 @@
 <?php
 
 class ModelExtensionModuleIssBulksyncImport extends Model {
-   private $sync_id;
-   private $meta_keyword_prefix="";
-   private $meta_description_prefix="";
+    private $sync_id;
+    private $meta_keyword_prefix="";
+    private $meta_description_prefix="";
+    private $round_to=0.01;
+    private $tax_class_id=0;
     
     public function __construct($registry) {
         parent::__construct($registry);
@@ -20,6 +22,12 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         $this->language_id=$this->sync_config->source_language;
         $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
         $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
+         if( isset($this->sync_config->round_to) ){
+            $this->round_to=$this->sync_config->round_to;
+        }
+        if( isset($this->sync_config->tax_class) ){
+            $this->tax_class_id=$this->sync_config->tax_class_id;
+        }
         //header("content-type:text/plain");print_r($this->sync_config);die;
     }
 
@@ -488,7 +496,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
 
     private function remoteFileExists($url){
         if( strpos($url, 'http')!==0 ){
-            //http not at the beginning of $url
+            //http not at the beginning of $url this is local file
             return true;
         }
         stream_context_set_default(
@@ -506,7 +514,13 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         if(empty($url)){
             return null;
         }
-        if( empty($this->sync_config->download_images) ){
+        if( empty($this->sync_config->image_handling) || $this->sync_config->image_handling!='load' ){     
+            if( strpos($url, 'http')!==0) {
+                if( strpos($url,'catalog/')!==0 ){
+                    return 'catalog/'.$url;
+                }
+                return $url;
+            }
             return $this->remoteFileExists($url)?$url:null;
         }
         $ext = pathinfo($url, PATHINFO_EXTENSION);
@@ -560,15 +574,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         ////////////////////////////////
         //DESCRIPTION SECTION
         ////////////////////////////////
-        $row['description'] = preg_replace('/{{\w+}}/', '', $row['description']);
-        $product_description[$this->language_id] = [
-            'name' => $row['product_name'],
-            'description' => $row['description'],
-            'meta_title' => strip_tags($row['product_name']. ' ' . $row['manufacturer']),
-            'meta_description' => mb_substr($this->meta_description_prefix . strip_tags($row['description']), 0, 500),
-            'meta_keyword' => $this->meta_keyword_prefix . str_replace(' ', ',', strip_tags($row['product_name'])),
-            'tag' => $row['tag'],
-        ];
+        $product_description = $this->composeProductDescription($row);
         ////////////////////////////////
         //COMPOSING SECTION
         ////////////////////////////////
@@ -590,7 +596,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'minimum' => $row['min_order_size'],
             'subtract' => '',
             'date_available' => '',
-            'price' => round($row['price'] * $category_comission, 0),
+            'price' => round($row['price'] * $category_comission / $this->round_to, 0) * $this->round_to,
             'points' => $row['points'],
             'weight' => $row['weight'],
             'weight_class_id' => 0,
@@ -598,7 +604,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'width' => $row['width'],
             'height' => $row['height'],
             'length_class_id' => 0,
-            'tax_class_id' => 0,
+            'tax_class_id' => $this->tax_class_id,
             'sort_order' => $sort_order,
             'name' => $row['product_name'],
             'manufacturer_id' => $this->composeProductManufacturer($row['manufacturer']),
@@ -623,6 +629,32 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             $product['price']=round($product['price'] * $category_retail_comission * (1-rand(1, $delta_percent)/100), 0);
         }
         return $product;
+    }
+    
+    private function composeProductDescription($row){
+        $product_description = [];
+        
+        $filter = [
+            'filter_model' => $row['model']
+        ];
+        $products = $this->model_extension_module_iss_bulksync_product->getProducts($filter);
+        if(!empty($products)){
+            $product = $products[0];
+        }
+        if(!empty($product['description'])){
+            $row['description'] = $product['description'];
+        } else {
+            $row['description'] = preg_replace('/{{\w+}}/', '', $row['description']);
+        }
+        $product_description[$this->language_id] = [
+            'name' => $row['product_name'],
+            'description' => $row['description'],
+            'meta_title' => strip_tags($row['product_name']. ' ' . $row['manufacturer']),
+            'meta_description' => mb_substr($this->meta_description_prefix . strip_tags($row['description']), 0, 500),
+            'meta_keyword' => $this->meta_keyword_prefix . str_replace(' ', ',', strip_tags($row['product_name'])),
+            'tag' => $row['tag'],
+        ];
+        return $product_description;
     }
 
     private function reorderOptions() {

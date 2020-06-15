@@ -119,7 +119,10 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-
+                                    <div class="form-group">
+                                        <label>{{ text_source_file }}: </label>
+                                        <input class="form-control" name="source_file" placeholder="{{ text_source_file }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -660,6 +663,29 @@
                                     </div>
                                 </div>
                             </div>                    
+                            <h2>{{ text_attribute_group }}</h2>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>{{ text_attribute_group_template }}</label>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <input class="form-control" name="attribute_group-label" placeholder="{{ text_attribute_group_placeholder }}">
+                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute_group-group_infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                        </div>
+                                        <select data-type="source" class="form-control" name="attribute_group-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div> 
+                                </div> 
+                            </div>                     
                         </div>
                                                 
                                                 
@@ -667,39 +693,44 @@
 
                         <div id="iss_selector_form_extra" class="collapse">
                             <div class="form-group">
-                                <label>{{ text_filter_delimiters }}:</label>
-                                <input class="form-control" name="filter_delimeter" placeholder="{{ text_filter_delimiters }}">
-                            </div>
-                            <div class="form-group">
                                 <label>{{ text_parsing_mode }}:</label>
                                 <select name="parsing_mode" class="form-control">
                                     <option value="detect_unchanged_entries">{{ text_parse_changed_only }}</option>
                                     <option value="import_all">{{ text_parse_all }}</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
                                 <label>{{ text_delete_absent }}:</label>
                                 <select name="delete_absent_products" class="form-control">
                                     <option value="yes">{{ text_yes }}</option>
                                     <option value="">{{ text_no }} ({{ text_default }})</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
                                 <label>{{ text_import_images }}:</label>
                                 <select name="image_mode" class="form-control">
-                                    <option value="only_new_products">{{ text_images_new_only }}</option>
+                                    <option value="">{{ text_images_new_only }} ({{ text_default }})</option>
                                     <option value="all_products">{{ text_images_all }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>{{ text_meta_keyword_prefix }}:</label>
                                 <input class="form-control" name="meta_keyword_prefix" placeholder="{{ text_meta_keyword_prefix }}">
-                            </div>
-                            <div class="form-group">
                                 <label>{{ text_meta_tag_prefix }}:</label>
                                 <input class="form-control" name="meta_description_prefix" placeholder="{{ text_meta_tag_prefix }}">
                             </div>
-                            
+                            <div class="form-group">
+                                <label>{{ text_filter_delimiters }}:</label>
+                                <input class="form-control" name="filter_delimeter" placeholder="{{ text_filter_delimiters }}">
+                            </div>
+                            <div class="form-group">
+                                <label>{{ text_round_to }}:</label>
+                                <input class="form-control" name="round_to" placeholder="{{ text_round_to }}">
+
+                                <label>{{ text_tax_class }}:</label>
+                                <select class="form-control" name="tax_class_id">
+                                    <option value="0">-</option>
+                                    {% for tax_class in tax_class_list %}
+                                    <option value="{{ tax_class.tax_class_id }}">{{ tax_class.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div> 
                     </form>
                     <!-- /SELECTOR FORM -->

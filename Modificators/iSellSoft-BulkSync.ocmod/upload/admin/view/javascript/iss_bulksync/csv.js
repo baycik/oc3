@@ -53,7 +53,7 @@ Setup.selectorForm = {
                 return true;
             }
             if ( input_type==='label' ) {
-                if( input_field.indexOf('attribute') > -1 ){
+                if( input_field.indexOf('attribute') > -1 && input_field.indexOf('attribute_group') < 0){
                     var label=$(`input[name=${input_field}-label]`).val();
                     var attribute_name=label.split('|')[0]||'';
                     var attribute_group_name=label.split('|')[1]||'';
@@ -62,6 +62,29 @@ Setup.selectorForm = {
                         name:attribute_name,
                         group_description:attribute_group_name
                     });
+                }
+                if( input_field.indexOf('attribute_group') > -1 ){
+                    var label=$(`input[name=${input_field}-label]`).val();
+                    var attribute_array = [];
+                    if(label.indexOf(',') == -1){
+                        attribute_array.push(label);
+                    }else{
+                        attribute_array = label.split(',');
+                    }
+                    for(var i = 0; i < attribute_array.length; i++){
+                        var current_attribute = attribute_array[i];
+                        var attribute_name=current_attribute.split('|')[0]||'';
+                        if(attribute_name == ''){
+                            continue;
+                        }
+                        var attribute_group_name=current_attribute.split('|')[1]||'';
+                        config.sync_config.attributes.push({
+                            field:input_field,
+                            name:attribute_name,
+                            group_description:attribute_group_name,
+                            index: i
+                        });
+                    }
                 }
                 if( input_field.indexOf('option') > -1 ){
                     var label=$(`input[name=${input_field}-label]`).val();
@@ -76,7 +99,7 @@ Setup.selectorForm = {
                     });
                 }
             } else
-            if( input_type==='infilter' ){
+            if( input_type==='infilter'){
                 var label=$(`input[name=${input_field}-label]`).val() || $input.parent().parent().find('label').html().replace(':','');
                 var filter_name=label.split('|')[0]||'';
                 config.sync_config.filters.push({
@@ -85,6 +108,29 @@ Setup.selectorForm = {
                     group_description:filter_name,
                     delimeter:delimeter
                 });
+            } else
+            if( input_type==='group_infilter' ){
+                var label = $(`input[name=${input_field}-label]`).val();
+                var attribute_array = [];
+                if(label.indexOf(',') == -1){
+                    attribute_array.push(label);
+                }else{
+                    attribute_array = label.split(',');
+                }
+                for(var i = 0; i < attribute_array.length; i++){
+                    var current_attribute = attribute_array[i];
+                    var filter_name=current_attribute.split('|')[0]||'';
+                    if(filter_name == ''){
+                        continue;
+                    }
+                    config.sync_config.filters.push({
+                        field:input_field,
+                        name:filter_name,
+                        group_description:filter_name,
+                        delimeter:delimeter,
+                        index: i
+                    });
+                }
             } else
             if( input_type==='inattribute' ){
                 var label=$(`input[name=${input_field}-label]`).val() || $input.parent().parent().find('label').html().replace(':','');
@@ -100,6 +146,9 @@ Setup.selectorForm = {
                 config.sync_config.sources[input_field] = input_value;
             }
             else {
+                if(input_value.indexOf('\\') > -1){
+                    input_value = input_value.replace(/\\/g, "\\\\");
+                }
                 config.sync_config[input_name] = input_value;
             }
         });
@@ -144,8 +193,16 @@ Setup.selectorForm = {
         }
         for (var attribute of sync_config.attributes) {
             var label=attribute.group_description?`${attribute.name}|${attribute.group_description}`:attribute.name;
-            fvalue[`${attribute.field}-label`] = label;
+            if(attribute.field == 'attribute_group'){
+                if(!fvalue[`${attribute.field}-label`]){
+                    fvalue[`${attribute.field}-label`] = '';
+                }
+                fvalue[`${attribute.field}-label`] += label+',';
+            } else {
+                fvalue[`${attribute.field}-label`] = label;
+            }
             fvalue[`${attribute.field}-infilter`] = is_filter(attribute.field);
+            fvalue[`${attribute.field}-group_infilter`] = is_filter(attribute.field);
         }
         for (var option of sync_config.options) {
             var label=option.group_description?`${option.name}|${option.group_description}`:option.name;
