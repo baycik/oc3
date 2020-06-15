@@ -158,7 +158,7 @@ Setup.selectorForm = {
         config.sync_name=config.sync_config.sync_name;
         Setup.selectorForm.config=config;
         
-        var url = `./?route=extension/module/iss_bulksync_setup/syncConfigSave&user_token=${Setup.user_token}`;
+        var url = `./?route=extension/module/iss_bulksync_setup/syncConfigSave&`+ Setup.token_name +`=${Setup.user_token}`;
         var request = {
             sync_id: Setup.sync_id,
             config: JSON.stringify(Setup.selectorForm.config)
@@ -232,9 +232,9 @@ Setup.selectorForm = {
         }
         var request = {
             route: 'extension/module/iss_bulksync_setup/syncConfigGet',
-            sync_id: Setup.sync_id,
-            user_token: Setup.user_token
+            sync_id: Setup.sync_id
         };
+        request[Setup.token_name] = Setup.user_token;
         $.get("./", request, function (resp) {
             try {
                 var config = JSON.parse(resp);

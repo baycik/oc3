@@ -5,8 +5,11 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
     private $error = array();
 
     public function index() {
-        $this->load->language('extension/module/iss_bulksync/setup');
-        $this->load->language('extension/module/iss_bulksync/fields');
+        $data = [];
+        $data['language'] = [];
+        $data['language'] = array_merge($data['language'], $this->load->language('extension/module/iss_bulksync/setup'));
+        $data['language'] = array_merge($data['language'], $this->load->language('extension/module/iss_bulksync/fields'));
+
 
 	$this->document->setTitle($this->language->get('heading_title'));
         
@@ -15,7 +18,9 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
                
 	$url = '';
         
-        if(!empty($this->session->data['token'])){
+        $data['token_name'] = 'user_token';
+        if(!empty($this->session->data['token']) && empty($this->session->data['user_token'])){
+            $data['token_name'] = 'token';
             $this->session->data['user_token'] = $this->session->data['token'];
         }
         
@@ -23,7 +28,7 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         
 	$data['breadcrumbs'][] = array(
                 'text' => $this->language->get('text_home'),
-                'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
+                'href' => $this->url->link('common/dashboard', $data['token_name'].'=' . $this->session->data['user_token'], true)
         );
 
 	$data['breadcrumbs'][] = array(
@@ -110,7 +115,7 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         
         $this->load->model("extension/module/iss_bulksync/parsers/$sync_parser_name");
         $this->{"model_extension_module_iss_bulksync_parsers_".$sync_parser_name}->install();
-        $this->response->redirect($this->url->link('extension/module/iss_bulksync_setup', 'user_token=' . $this->session->data['user_token'], true));
+        $this->response->redirect($this->url->link('extension/module/iss_bulksync_setup', $data['token_name'].'=' . $this->session->data['user_token'], true));
     }
     
     public function deleteParser(){
