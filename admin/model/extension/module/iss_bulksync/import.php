@@ -63,7 +63,6 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             ";
         $result = $this->db->query($sql);
         $this->profile("select group ");
-        
         if (!$result->num_rows) {
             return true;
         }
@@ -645,6 +644,12 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             $row['description'] = $product['description'];
         } else {
             $row['description'] = preg_replace('/{{\w+}}/', '', $row['description']);
+        }
+        if(empty($this->meta_description_prefix)){
+            $this->meta_description_prefix = '';
+        }
+        if(empty($this->meta_keyword_prefix)){
+            $this->meta_keyword_prefix = '';
         }
         $product_description[$this->language_id] = [
             'name' => $row['product_name'],

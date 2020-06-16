@@ -174,7 +174,7 @@
 	    } else {
 		$row_node.removeClass('selected-row');
 	    }
-	    $.post('index.php?route=extension/module/iss_bulksync_import/saveImportPrefs&token=<?php echo $token; ?>', {data: JSON.stringify(item)}, function (ok) {
+	    $.post('index.php?route=extension/module/iss_bulksync_import/saveImportPrefs&token=<?php echo $user_token; ?>', {data: JSON.stringify(item)}, function (ok) {
 		if (!ok * 1) {
 		    alert("<?php echo $language['text_save_setting_failed']; ?>");
 		};
@@ -189,7 +189,7 @@
 		$('.progress-header').html('<?php echo $language["text_import_starting"]; ?>');
 		$('#spinner_icon').show();
 		$(".btn-secondary").attr('disabled', '');
-		$.post('index.php?route=extension/module/iss_bulksync_import/getTotalImportCategories&token=<?php echo $token; ?>', {sync_id: sync_id}, function (total) {
+		$.post('index.php?route=extension/module/iss_bulksync_import/getTotalImportCategories&token=<?php echo $user_token; ?>', {sync_id: sync_id}, function (total) {
 		    var totalCategories = JSON.parse(total);
 		    step_size = 100 / totalCategories.total_rows;
 		    $('.progress-header').val('<?php echo $language["text_import_progress"]; ?> ' + Math.round(current_progress) + '%');
@@ -203,7 +203,7 @@
                 current_progress=0;
 		$('.progress-bar').width('100%');
 		$('.progress-header').html('<?php echo $language["text_delete_absent"]; ?>');
-		$.post('index.php?route=extension/module/iss_bulksync_import/deleteAbsentProducts&token=<?php echo $token; ?>',{sync_id: sync_id}).done(function(ok){
+		$.post('index.php?route=extension/module/iss_bulksync_import/deleteAbsentProducts&token=<?php echo $user_token; ?>',{sync_id: sync_id}).done(function(ok){
 		    $('.progress-header').html('<?php echo $language["text_import_finished"]; ?>');
 		    $('#spinner_icon').hide();
 		    $(".btn-secondary").attr('disabled', null);
@@ -213,7 +213,7 @@
 		});
 		return;
 	    }
-	    $.post('index.php?route=extension/module/iss_bulksync_import/importUserProducts&token=<?php echo $token; ?>', {sync_id: sync_id, group_id: totalCategories.groups[0]}).done(function (ok) {
+	    $.post('index.php?route=extension/module/iss_bulksync_import/importUserProducts&token=<?php echo $user_token; ?>', {sync_id: sync_id, group_id: totalCategories.groups[0]}).done(function (ok) {
 		if (totalCategories.total_rows > 0) {
 		    current_progress += step_size;
 		    totalCategories.total_rows -= 1;
@@ -237,7 +237,7 @@
           $('input[name=\'category\']').autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url: 'index.php?route=extension/module/iss_bulksync_import/autocompleteCategories&token=<?php echo $token; ?>&filter_name=' + encodeURIComponent(request),
+                        url: 'index.php?route=extension/module/iss_bulksync_import/autocompleteCategories&token=<?php echo $user_token; ?>&filter_name=' + encodeURIComponent(request),
                         dataType: 'json',
                         success: function(json) {
                                 response($.map(json, function(item) {
