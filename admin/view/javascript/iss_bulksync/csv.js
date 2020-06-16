@@ -141,6 +141,7 @@ Setup.selectorForm = {
                     name:attribute_name,
                     group_description:attribute_group_name
                 });
+                
             } else
             if ( input_type==='source' ) {
                 config.sync_config.sources[input_field] = input_value;
@@ -193,6 +194,7 @@ Setup.selectorForm = {
         }
         for (var attribute of sync_config.attributes) {
             var label=attribute.group_description?`${attribute.name}|${attribute.group_description}`:attribute.name;
+            
             if(attribute.field == 'attribute_group'){
                 if(!fvalue[`${attribute.field}-label`]){
                     fvalue[`${attribute.field}-label`] = '';
@@ -201,6 +203,7 @@ Setup.selectorForm = {
             } else {
                 fvalue[`${attribute.field}-label`] = label;
             }
+            fvalue[`${attribute.field}-inattribute`] = 1;
             fvalue[`${attribute.field}-infilter`] = is_filter(attribute.field);
             fvalue[`${attribute.field}-group_infilter`] = is_filter(attribute.field);
         }
