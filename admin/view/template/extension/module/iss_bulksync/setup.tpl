@@ -56,7 +56,7 @@
                 <h3 class="panel-title"><i class="fa fa-pencil"></i> <?php echo $language['text_add_parser_title']; ?></h3>
             </div>
             <div class="panel-body">
-                <form action="index.php?route=extension/module/iss_bulksync_setup/addparser&token=<?php echo $token; ?>" method="post">
+                <form action="index.php?route=extension/module/iss_bulksync_setup/addparser&<?php echo $token_name; ?>=<?php echo $user_token; ?>" method="post">
                     <input type="hidden" name="sync_parser_name">
                     <input type="hidden" name="sync_name">
                     <?php foreach($parser_list as  $parser_id => $parser_name) { ?>
@@ -757,15 +757,16 @@
             $(".btn.btn-upload-positive").click(Setup.upload_file);
         },
         sync_id: 0,
-        token: '<?php echo $token; ?>',
+        user_token: '<?php echo $user_token; ?>',
+        token_name: '<?php echo $token_name; ?>',
         source_url: '',
         startParsing:function(request){
-            $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&token=<?php echo $token; ?>', request, function (ok) {
+            $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&<?php echo $token_name; ?>=<?php echo $user_token; ?>', request, function (ok) {
                 Setup.syncing_in_progress = false;
                 if (ok * 1) {
                     alert('<?php echo $language["text_loading_completed"]; ?>');
                     $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i><?php echo $button_parse_completed; ?>');
-                    location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&token=<?php echo $token; ?>';
+                    location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&<?php echo $token_name; ?>=<?php echo $user_token; ?>';
                 } else {
                     $("#form-parse .btn-download-positive").html('<?php echo $button_parse; ?>');
                     alert("<?php echo $language['text_error_while_parsing']; ?>: " + ok);
@@ -774,7 +775,7 @@
         },
         openImport:function(){
             Setup.sync_id = $('#form-parse select').val();
-            location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&token=<?php echo $token; ?>'; 
+            location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&<?php echo $token_name; ?>=<?php echo $user_token; ?>'; 
         },
         selectParser:function(sync_id){
             Setup.sync_id = sync_id;
@@ -805,7 +806,7 @@
             $("#form-parse .btn-danger").click(function () {
                 if (confirm("<?php echo $language['text_delete_parser']; ?>")) {
                     Setup.sync_id = $('#form-parse select').val();
-                    $.post('index.php?route=extension/module/iss_bulksync_setup/deleteparser&token=<?php echo $token; ?>', {sync_id: Setup.sync_id}, function (ok) {
+                    $.post('index.php?route=extension/module/iss_bulksync_setup/deleteparser&<?php echo $token_name; ?>=<?php echo $user_token; ?>', {sync_id: Setup.sync_id}, function (ok) {
                         location.reload();
                     });
                 }
@@ -819,12 +820,12 @@
                 Setup.syncing_in_progress = true;
                 $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i><?php echo $button_parsing; ?>');
                 e.preventDefault();
-                $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&token=<?php echo $token; ?>', {sync_id: Setup.sync_id}, function (ok) {
+                $.post('index.php?route=extension/module/iss_bulksync_setup/startParsing&<?php echo $token_name; ?>=<?php echo $user_token; ?>', {sync_id: Setup.sync_id}, function (ok) {
                     Setup.syncing_in_progress = false
                     if (ok * 1) {
                         //alert('<?php echo $language['text_loading_completed']; ?>');
                         $("#form-parse .btn-download-positive").html('<i id="spinner_icon" class="fa fa-circle-o-notch fa-spin"></i><?php echo $button_parse_completed; ?>');
-                        location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&token=<?php echo $token; ?>';
+                        location.href = 'index.php?route=extension/module/iss_bulksync_import&sync_id=' + Setup.sync_id + '&<?php echo $token_name; ?>=<?php echo $user_token; ?>';
                     } else {
                         $("#form-parse .btn-download-positive").html('<?php echo $button_parse; ?>');
                         alert("Error occured: " + ok);
@@ -855,7 +856,7 @@
                 if ($('#form-upload input[name=\'file\']').val() !== '') {
                     clearInterval(Setup.timer);
                     $.ajax({
-                        url: 'index.php?route=tool/upload/upload&token=<?php echo $token; ?>',
+                        url: 'index.php?route=tool/upload/upload&<?php echo $token_name; ?>=<?php echo $user_token; ?>',
                         type: 'post',
                         dataType: 'json',
                         data: new FormData($('#form-upload')[0]),

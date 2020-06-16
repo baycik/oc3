@@ -5,7 +5,6 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
     private $error = array();
 
     public function index() {
-        
         $data = [];
         $data['language'] = [];
         $data['language'] = array_merge($data['language'], $this->load->language('extension/module/iss_bulksync/import'));

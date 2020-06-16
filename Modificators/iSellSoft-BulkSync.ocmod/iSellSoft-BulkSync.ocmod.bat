@@ -6,6 +6,7 @@ ROBOCOPY "../../admin/model/extension/module/iss_bulksync/" "./upload/admin/mode
 
 ROBOCOPY "../../admin\language\tr-tr\extension\module/iss_bulksync/" "./upload/admin\language\tr-tr\extension\module/iss_bulksync/"  /mir
 ROBOCOPY "../../admin\language\en-gb\extension\module/iss_bulksync/" "./upload/admin\language\en-gb\extension\module/iss_bulksync/"  /mir
+ROBOCOPY "../../admin\language\ru-ru\extension\module/iss_bulksync/" "./upload/admin\language\ru-ru\extension\module/iss_bulksync/"  /mir
 ROBOCOPY "../../admin/model/extension/module/iss_bulksync/" "./upload/admin/model/extension/module/iss_bulksync/"  /mir
 ROBOCOPY "../../admin/view/template/extension/module/iss_bulksync/" "./upload/admin/view/template/extension/module/iss_bulksync/"  /mir
 ROBOCOPY "../../admin/view/javascript/iss_bulksync/" "./upload/admin/view/javascript/iss_bulksync/"  /mir
