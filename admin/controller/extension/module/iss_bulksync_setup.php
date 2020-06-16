@@ -19,7 +19,7 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
 	$url = '';
         
         $data['token_name'] = 'user_token';
-        if(!empty($this->session->data['token']) && empty($this->session->data['user_token'])){
+        if(!empty($this->session->data['token'])){
             $data['token_name'] = 'token';
             $this->session->data['user_token'] = $this->session->data['token'];
         }
