@@ -5,7 +5,17 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
     private $error = array();
 
     public function index() {
-	$url = '&user_token=' . $this->session->data['user_token'] ;
+        $data = [];
+        $data['language'] = [];
+        $data['language'] = array_merge($data['language'], $this->load->language('extension/module/iss_bulksync/import'));
+
+        $data['token_name'] = 'user_token';
+        if(!empty($this->session->data['token'])){
+            $data['token_name'] = 'token';
+            $this->session->data['user_token'] = $this->session->data['token'];
+        }
+        
+	$url = '&'.$data['token_name'].'=' . $this->session->data['user_token'] ;
         if ( isset($this->request->get['sync_id']) ) {
             $sync_id=$this->request->get['sync_id'];
 	    $url .= '&sync_id=' . $this->request->get['sync_id'];
@@ -18,14 +28,12 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
 	    $url .= '&filter_name=' . urlencode(html_entity_decode($this->request->get['filter_name'], ENT_QUOTES, 'UTF-8'));
 	}
         
-	$this->load->language('extension/module/iss_bulksync/import');
 	$this->document->setTitle($this->language->get('heading_title'));
         
-	$data = [];
 	$data['breadcrumbs'] = array();
 	$data['breadcrumbs'][] = array(
 	    'text' => $this->language->get('text_home'),
-	    'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'] , true)
+	    'href' => $this->url->link('common/dashboard', $data['token_name'].'=' . $this->session->data['user_token'] , true)
 	);
         
         $data['breadcrumbs'][] = array(
@@ -65,7 +73,7 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
 	}
         //$url .= '&page=' . $page;
         $this->load->model('extension/module/iss_bulksync/parse');
-	$data['back'] = $this->url->link('extension/module/iss_bulksync_setup', 'user_token=' . $this->session->data['user_token'], true);
+	$data['back'] = $this->url->link('extension/module/iss_bulksync_setup', $data['token_name'].'=' . $this->session->data['user_token'], true);
 	$data['sort'] = $sort;
 	$data['order'] = $order;
 	$data['heading_title'] = $this->language->get('heading_title');
@@ -167,7 +175,7 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
 				'sort'        => 'name',
 				'order'       => 'ASC',
 				'start'       => 0,
-				'limit'       => 5
+				'limit'       => 10
 			);
 
 			$results = $this->model_catalog_category->getCategories($filter_data);

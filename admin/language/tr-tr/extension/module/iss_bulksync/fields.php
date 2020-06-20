@@ -1,10 +1,12 @@
 <?php		
+//Heading
 $_['heading_title']                =	"IsellSoft Toplu İthalat";
 $_['heading_title_parser']      =	"Kaynak listesi";
 //Text
 $_['text_source_name']          =	"Kaynak adı";
 $_['text_source_settings']      =	"Kaynak ayarları";
 $_['text_source_language']      =	"Kaynak dili";
+$_['text_source_file']          =	"Kaynak URL";
 
 $_['text_grouping']             =	"Gruplama yöntemi";
 $_['text_source_group1']        =	"Kaynak Grubu 1";
@@ -68,6 +70,10 @@ $_['text_attribute9']           =	"Özellik 9";
 $_['text_attribute10']          =	"Özellik 10";
 $_['text_attribute11']          =	"Özellik 11";
 $_['text_attribute12']          =	"Özellik 12";
+
+$_['text_attribute_group']          =	"Özellik grubu";
+$_['text_attribute_group_template']          =	"Özellik grubu şablonu";
+$_['text_attribute_group_placeholder']       =	"Özellik adı|Özellik grubu,Özellik adı|Özellik grubu,Özellik adı|Özellik grubu...";
 
 $_['text_extra_settings']       =	"Ek ayarlar";
 $_['text_filter_delimiters']    =	"Filtre sınırlayıcıları";

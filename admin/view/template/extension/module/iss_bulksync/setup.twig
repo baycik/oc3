@@ -119,7 +119,10 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-4">
-
+                                    <div class="form-group">
+                                        <label>{{ text_source_file }}: </label>
+                                        <input class="form-control" name="source_file" placeholder="{{ text_source_file }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -660,6 +663,29 @@
                                     </div>
                                 </div>
                             </div>                    
+                            <h2>{{ text_attribute_group }}</h2>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="form-group">
+                                        <label>{{ text_attribute_group_template }}</label>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <input class="form-control" name="attribute_group-label" placeholder="{{ text_attribute_group_placeholder }}">
+                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <div style="float: right">
+                                            <input type="checkbox" name="attribute_group-group_infilter" class="form-control" style="display:inline-block"> {{ text_is_filter }}
+                                        </div>
+                                        <select data-type="source" class="form-control" name="attribute_group-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div> 
+                                </div> 
+                            </div>                     
                         </div>
                                                 
                                                 
@@ -735,6 +761,7 @@
         },
         sync_id: 0,
         user_token: '{{ user_token }}',
+        token_name: '{{ token_name }}',
         startParsing:function(){
             
         },

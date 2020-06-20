@@ -26,12 +26,31 @@ class ModelExtensionModuleIssBulksyncParsersUploadSpreadsheet extends ModelExten
 
     public function parse($sync) {
         $this->sync = $sync;
-        $this->load->model('tool/upload');
-        $source_file = $this->model_tool_upload->getUploadByCode($_FILES[0]);
-        $filename = DIR_UPLOAD . $source_file['filename'];
         $sync_id = $sync['sync_id'];
+        if(!empty($this->sync['sync_config']->source_file)){
+            $source_file = $this->sync['sync_config']->source_file;
+            $sync_name = $this->sync['sync_config']->sync_name;
+            $filename = './'.$sync_name.rand(0,1000);
+            if(!copy($source_file, $filename)){
+                die("Downloading failed");
+            };
+        } else {
+            $this->load->model('tool/upload');
+            $source_file = $this->model_tool_upload->getUploadByCode($_FILES[0]);
+            $filename = DIR_UPLOAD . $source_file['filename'];
+            $this->model_tool_upload->deleteUpload($source_file['upload_id']);
+        }
         if ( $xlsx = SimpleXLSX::parse($filename) ) {
             foreach ($xlsx->rows() as $row) {
+                foreach($row as $column){
+                    if(strpos($column, '<!') !== false){
+                        $header_start = strpos($column, '<!')+2;
+                        $header_end = strpos($column, '!>');
+                        $header = substr($column, $header_start, $header_end-$header_start);
+                        $this->handleHeader($header, $this->sync);
+                        continue 2; 
+                    }  
+                }
                 $set = "";
                 foreach ($this->sync['sync_config']->sources as $field => $index) {
                     $value=$this->db->escape($row[$index - 1]);
@@ -57,6 +76,57 @@ class ModelExtensionModuleIssBulksyncParsersUploadSpreadsheet extends ModelExten
         $this->model_tool_upload->deleteUpload($source_file['upload_id']);
         unlink($filename);
         return true;
+    }
+    private function handleHeader($header, $sync) {
+        if(!empty($sync['sync_config']->source_file) && strpos($sync['sync_config']->source_file, '\\') !== false){
+            $sync['sync_config']->source_file = str_replace('\\', '\\\\', $sync['sync_config']->source_file);
+        }
+        
+        $sync['sync_config']->attributes = $this->verifyLocalConfig($sync['sync_config']->attributes, $header);
+        $this->db->query("UPDATE iss_sync_list SET sync_config = '".json_encode($sync['sync_config'], JSON_UNESCAPED_UNICODE )."' WHERE sync_id='{$sync['sync_id']}'");
+        return;
+    }
+    
+    private function verifyLocalConfig($db_config_attributes, $header){
+        $attribute_group_list = $this->prepareAttributeGroup($header);
+        if(empty($db_config_attributes)){
+           $db_config_attributes = $attribute_group_list;
+        } else {
+            $db_attribute_names = $this->getDbAttributesNames($db_config_attributes);
+            foreach($attribute_group_list as $attribute){
+                if(strpos($db_attribute_names, $attribute['name']) !== false){
+                    continue;
+                }
+                array_push($db_config_attributes,$attribute);
+            }
+        } 
+        return $db_config_attributes;
+    }
+    
+    private function prepareAttributeGroup($attribute_group_template){
+        $attribute_group_list = [];
+        $csv_attributes = explode(',', $attribute_group_template);
+        foreach($csv_attributes as $index => $attribute){
+            if(strpos($attribute, '|') === false){
+                continue;
+            }
+            $attribute_object = [
+                'field' => 'attribute_group',
+                'name' => explode('|', $attribute)[0],
+                'group_description' => explode('|', $attribute)[1],
+                'index' => $index
+            ];
+            array_push($attribute_group_list,$attribute_object);
+        }
+        return $attribute_group_list;
+    }
+
+    private function getDbAttributesNames($db_config_attributes){
+        $db_attribute_names = '';
+        foreach($db_config_attributes as $attribute){
+            $db_attribute_names .= $attribute->name;
+        }
+        return $db_attribute_names;
     }
 
 }
