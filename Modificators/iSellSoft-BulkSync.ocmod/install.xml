@@ -3,6 +3,7 @@
     <code><![CDATA[iSellSoft-BulkSync]]></code>
     <version>1.0</version>
     <author>iSellSoft</author>
+    <link>isellsoft.net</link>
     <file path="admin/controller/common/column_left.php">
         <operation error="skip">
             <search><![CDATA[if ($this->user->hasPermission('access', 'catalog/recurring')) {

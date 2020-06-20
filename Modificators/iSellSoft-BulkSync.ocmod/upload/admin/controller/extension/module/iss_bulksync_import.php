@@ -129,15 +129,23 @@ class ControllerExtensionModuleIssBulksyncImport extends Controller {
         $sync_id=$this->request->request['sync_id'];
         $group_id=$this->request->request['group_id'];
         $this->load->model('extension/module/iss_bulksync/import');
-	$ok=$this->model_extension_module_iss_bulksync_import->importStart($sync_id, $group_id,0);
-        die($ok);
+        try{
+	    $ok=$this->model_extension_module_iss_bulksync_import->importStart($sync_id, $group_id,0);
+        } catch(Exception $e){
+            echo $e->getMessage();
+        }
+        echo $ok;
     }
     
     public function deleteAbsentProducts(){
         $sync_id=$this->request->request['sync_id'];
         $this->load->model('extension/module/iss_bulksync/import');
-	$ok=$this->model_extension_module_iss_bulksync_import->deleteAbsentProducts($sync_id);
-	die($ok);
+	try{
+	    $ok=$this->model_extension_module_iss_bulksync_import->deleteAbsentProducts($sync_id);
+        } catch(Exception $e){
+            echo $e->getMessage();
+        }
+        echo $ok;
     }
     
     public function getTotalImportCategories() {

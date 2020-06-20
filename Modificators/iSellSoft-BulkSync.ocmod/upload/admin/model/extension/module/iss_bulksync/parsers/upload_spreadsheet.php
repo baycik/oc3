@@ -34,7 +34,8 @@ class ModelExtensionModuleIssBulksyncParsersUploadSpreadsheet extends ModelExten
             foreach ($xlsx->rows() as $row) {
                 $set = "";
                 foreach ($this->sync['sync_config']->sources as $field => $index) {
-                    $set .= ", $field='{$row[$index - 1]}'";
+                    $value=$this->db->escape($row[$index - 1]);
+                    $set .= ", $field='$value'";
                 }
                 $sql = "
                     INSERT INTO 
@@ -54,6 +55,7 @@ class ModelExtensionModuleIssBulksyncParsersUploadSpreadsheet extends ModelExten
             echo SimpleXLSX::parseError();
         }
         $this->model_tool_upload->deleteUpload($source_file['upload_id']);
+        unlink($filename);
         return true;
     }
 

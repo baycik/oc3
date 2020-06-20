@@ -1,0 +1,23 @@
+<modification>
+    <name><![CDATA[iSellSoft-PriceUpdater]]></name>
+    <code><![CDATA[iSellSoft-PriceUpdater]]></code>
+    <version>1.0</version>
+    <author>iSellSoft</author>
+    <link>isellsoft.net</link>
+    <file path="admin/controller/common/column_left.php">
+        <operation error="skip">
+            <search><![CDATA[if ($this->user->hasPermission('access', 'catalog/recurring')) {
+                        ]]>
+            </search>
+            <add position="before" offset="0"><![CDATA[ 
+                            
+                    $catalog[] = array(
+                            'name'     => "Toplu Fiyat Güncelleyicisi",
+                            'href'     => $this->url->link('extension/module/iss_price_updater_monitor', 'user_token=' . $this->session->data['user_token'], true),
+                            'children' => array()		
+                    );
+                            
+			]]></add>
+        </operation>
+    </file>
+</modification>

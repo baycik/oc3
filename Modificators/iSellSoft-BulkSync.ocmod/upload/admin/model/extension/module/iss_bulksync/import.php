@@ -4,6 +4,9 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
    private $sync_id;
    private $meta_keyword_prefix="";
    private $meta_description_prefix="";
+   private $round_to=0.01;
+   private $tax_class_id=0;
+   private $image_mode='';
     
     public function __construct($registry) {
         parent::__construct($registry);
@@ -18,8 +21,21 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         }
         $this->sync_config = json_decode($result->row['sync_config'], false, 512, JSON_UNESCAPED_UNICODE);
         $this->language_id=$this->sync_config->source_language;
-        $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
-        $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
+        if( isset($this->sync_config->meta_keyword_prefix) ){
+            $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
+        }
+        if( isset($this->sync_config->meta_description_prefix) ){
+            $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
+        }
+        if( isset($this->sync_config->round_to) ){
+            $this->round_to=$this->sync_config->round_to;
+        }
+        if( isset($this->sync_config->tax_class_id) ){
+            $this->tax_class_id=$this->sync_config->tax_class_id;
+        }
+        if( isset($this->sync_config->image_mode) ){
+            $this->image_mode=$this->sync_config->image_mode;
+        }
         //header("content-type:text/plain");print_r($this->sync_config);die;
     }
 
@@ -68,6 +84,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
     }
 
     private function importProductGroup($group_data) {
+        @set_time_limit(300);
         $required_field='';
         if( isset($this->sync_config->required_field) ){
             $required_field = " AND {$this->sync_config->required_field} IS NOT NULL  AND {$this->sync_config->required_field}<>'' ";
@@ -488,7 +505,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
 
     private function remoteFileExists($url){
         if( strpos($url, 'http')!==0 ){
-            //http not at the beginning of $url
+            //http not at the beginning of $url this is local file
             return true;
         }
         stream_context_set_default(
@@ -506,7 +523,13 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         if(empty($url)){
             return null;
         }
-        if( empty($this->sync_config->download_images) ){
+        if( empty($this->sync_config->image_handling) || $this->sync_config->image_handling!='load' ){     
+            if( strpos($url, 'http')!==0) {
+                if( strpos($url,'catalog/')!==0 ){
+                    return 'catalog/'.$url;
+                }
+                return $url;
+            }
             return $this->remoteFileExists($url)?$url:null;
         }
         $ext = pathinfo($url, PATHINFO_EXTENSION);
@@ -590,7 +613,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'minimum' => $row['min_order_size'],
             'subtract' => '',
             'date_available' => '',
-            'price' => round($row['price'] * $category_comission, 0),
+            'price' => round($row['price'] * $category_comission / $this->round_to, 0) * $this->round_to,
             'points' => $row['points'],
             'weight' => $row['weight'],
             'weight_class_id' => 0,
@@ -598,7 +621,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'width' => $row['width'],
             'height' => $row['height'],
             'length_class_id' => 0,
-            'tax_class_id' => 0,
+            'tax_class_id' => $this->tax_class_id,
             'sort_order' => $sort_order,
             'name' => $row['product_name'],
             'manufacturer_id' => $this->composeProductManufacturer($row['manufacturer']),
@@ -613,7 +636,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'product_store' => [$this->store_id],
             'status' => 1
         ];
-        if ( $this->sync_config->image_mode==='all_products' || $product_is_new ) {
+        if ( $this->image_mode==='all_products' || $product_is_new ) {
             $product['image'] =         $this->composeProductImage($row);
             $product['product_image'] = $this->composeProductImageObject($row);
         }
@@ -622,6 +645,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             $product['product_special']=$this->composeProductSpecial($product['price']);
             $product['price']=round($product['price'] * $category_retail_comission * (1-rand(1, $delta_percent)/100), 0);
         }
+        //print_r($product);die;
         return $product;
     }
 

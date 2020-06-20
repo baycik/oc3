@@ -40,6 +40,12 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         
         $this->load->model('localisation/language');
         $data['language_list']=$this->model_localisation_language->getLanguages();
+        $this->load->model('localisation/tax_class');
+        $data['tax_class_list']=$this->model_localisation_tax_class->getTaxClasses();
+        
+        
+        
+        
         $data['source_column_options']=$this->getColumnNumbers();
         
 	$this->load->model('extension/module/iss_bulksync/setup');
