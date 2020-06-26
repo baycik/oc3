@@ -11,5 +11,5 @@ ROBOCOPY "../../admin/model/extension/module/iss_bulksync/" "./upload/admin/mode
 ROBOCOPY "../../admin/view/template/extension/module/iss_bulksync/" "./upload/admin/view/template/extension/module/iss_bulksync/"  /mir
 ROBOCOPY "../../admin/view/javascript/iss_bulksync/" "./upload/admin/view/javascript/iss_bulksync/"  /mir
 
-"%ProgramFiles%\WinRAR\WinRAR.exe" a -afzip -ep1 -ibck -r -y -x*.bat -x*.zip "../../../iSellSoft-BulkSync1.0(3.0.x).ocmod.zip" "./*"
+"%ProgramFiles%\WinRAR\WinRAR.exe" a -afzip -ep1 -ibck -r -y -x*.bat -x*.zip "../../../iSellSoft-BulkSync1.1(3.0.x).ocmod.zip" "./*"
 PAUSE
