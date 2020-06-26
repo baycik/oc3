@@ -311,6 +311,14 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
+                                        <label>{{ entry_sort_order }}: </label>
+                                        <select data-type="source" class="form-control" name="sort_order-source" >
+                                            {{ source_column_options }}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
                                         <label>{{ text_stock_status }}: </label>
                                         <div style="float: right">
                                             <input type="checkbox" name="stock_status-inattribute" class="form-control" style="display:inline-block;"> {{ text_is_attribute }}

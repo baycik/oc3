@@ -311,6 +311,14 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
+                                        <label><?php echo $language['entry_sort_order']; ?>: </label>
+                                        <select data-type="source" class="form-control" name="sort_order-source" >
+                                            <?php echo $source_column_options; ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
                                         <label><?php echo $language['text_stock_status']; ?>: </label>
                                         <div style="float: right">
                                             <input type="checkbox" name="stock_status-inattribute" class="form-control" style="display:inline-block;"> <?php echo $language['text_is_attribute']; ?>

@@ -9,6 +9,7 @@ class ControllerExtensionModuleIssBulkSyncSetup extends Controller {
         $data['language'] = [];
         $data['language'] = array_merge($data['language'], $this->load->language('extension/module/iss_bulksync/setup'));
         $data['language'] = array_merge($data['language'], $this->load->language('extension/module/iss_bulksync/fields'));
+        $data['language'] = array_merge($data['language'], $this->load->language('catalog/product'));
 
 
 	$this->document->setTitle($this->language->get('heading_title'));
