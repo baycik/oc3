@@ -39,16 +39,6 @@
             </ul>
         </div>
     </div>
-    <div class="successdiv">
-        <?php if(isset($success)){ ?>
-            <div class="alert alert-success"><i class="fa fa-check-circle"></i> <?php echo $success; ?></div>
-        <?php } ?>
-    </div>
-    <div class="errordiv">
-        <?php if(isset($error_warning)){ ?>
-            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?></div>
-        <?php } ?>
-    </div>
 
     <div class="container-fluid">
         <div id="content" class="panel panel-default"><?php echo $content_top; ?>
