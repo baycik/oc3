@@ -20,8 +20,12 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         }
         $this->sync_config = json_decode($result->row['sync_config'], false, 512, JSON_UNESCAPED_UNICODE);
         $this->language_id=$this->sync_config->source_language;
-        $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
-        $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
+        if( isset($this->sync_config->meta_keyword_prefix) ){
+            $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
+        }
+        if( isset($this->sync_config->meta_description_prefix) ){
+            $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
+        }
          if( isset($this->sync_config->round_to) ){
             $this->round_to=$this->sync_config->round_to;
         }
