@@ -20,12 +20,8 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
         }
         $this->sync_config = json_decode($result->row['sync_config'], false, 512, JSON_UNESCAPED_UNICODE);
         $this->language_id=$this->sync_config->source_language;
-        if( isset($this->sync_config->meta_keyword_prefix) ){
-            $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
-        }
-        if( isset($this->sync_config->meta_description_prefix) ){
-            $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
-        }
+        $this->meta_keyword_prefix=$this->sync_config->meta_keyword_prefix;
+        $this->meta_description_prefix=$this->sync_config->meta_description_prefix;
          if( isset($this->sync_config->round_to) ){
             $this->round_to=$this->sync_config->round_to;
         }
@@ -622,7 +618,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
             'product_store' => [$this->store_id],
             'status' => 1
         ];
-        if ( isset($this->sync_config->image_mode) && $this->sync_config->image_mode==='all_products' || $product_is_new ) {
+        if ( $this->sync_config->image_mode==='all_products' || $product_is_new ) {
             $product['image'] =         $this->composeProductImage($row);
             $product['product_image'] = $this->composeProductImageObject($row);
         }
