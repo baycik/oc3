@@ -29,7 +29,7 @@ class ModelExtensionModuleIssBulksyncImport extends Model {
          if( isset($this->sync_config->round_to) ){
             $this->round_to=$this->sync_config->round_to;
         }
-        if( isset($this->sync_config->tax_class) ){
+        if( isset($this->sync_config->tax_class_id) ){
             $this->tax_class_id=$this->sync_config->tax_class_id;
         }
         //header("content-type:text/plain");print_r($this->sync_config);die;
