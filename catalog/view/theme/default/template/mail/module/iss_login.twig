@@ -1,0 +1,191 @@
+{{ header }}
+<div id="account-login" class="container">
+    {% if iss_register.success %}
+        <div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> {{ iss_register.success }}</div>
+    {% endif %}
+    {% if iss_register.error_warning %}
+        <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ iss_register.error_warning }}</div>
+    {% endif %}
+    {% if iss_login.error_warning %}
+        <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ iss_login.error_warning }}</div>
+    {% endif %}
+    <div class="row">
+        {% if column_left and column_right %}
+            {% set class = 'col-sm-6' %}
+        {% elseif column_left or column_right %}
+            {% set class = 'col-sm-9' %}
+        {% else %}
+            {% set class = 'col-sm-12' %}
+        {% endif %}
+        <div id="content" class="{{ class }} col-sm-6 producttab ">{{ content_top }}
+            <div class="well tabsslider   horizontal-tabs  ">
+                <ul class="nav nav-tabs font-sn">
+                    <li class="active"><a href="#tab-login" data-toggle="tab">{{ text_login }}</a></li>
+                    <li><strong>{{ text_or }}</strong></li>
+                    <li><a data-toggle="tab" href="#tab-register">{{ text_register }}</a></li>
+                    
+                </ul>
+                <div class="tab-content col-sm-12 ">
+                    <div  id="tab-login" class="col-sm-11 tab-pane active">
+                        <h2>{{ text_returning_customer }}</h2>
+                        <p><strong>{{ text_i_am_returning_customer }}</strong></p>
+                        <form action="{{ action_login }}" method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label class="control-label" for="input-telephone">{{ entry_login_telephone }}</label>
+                                <input type="text" name="telephone" pattern="[+0-9A-Za-z@\.]*" value="{{ iss_login.telephone }}" placeholder="{{ entry_login_telephone }}" id="login-input-telephone" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="input-password">{{ entry_password }}</label>
+                                <input type="password" name="password" value="{{ iss_login.password }}" placeholder="{{ entry_password }}" id="login-input-password" class="form-control" />
+                            </div>
+                            <input type="submit" value="{{ button_login }}" class="btn btn-primary" /> 
+                            <a class="btn btn-primary send-password" >{{ text_recieve_password }}</a>
+
+                            {% if redirect %}
+                                <input type="hidden" name="redirect" value="{{ redirect }}" />
+                            {% endif %}
+                        </form>
+                        <p class="send-error">
+
+                        </p>
+                    </div>
+                    <div id="tab-register" class="col-sm-11 tab-pane ">
+                        <h2>{{ text_new_customer }}</h2>
+                        <form action="{{ action_register }}" method="post" enctype="multipart/form-data">
+                            <fieldset id="account">
+                                <p>
+                                    <strong>{{ text_your_details }}</strong>
+                                </p>
+                                <div class="form-group required">
+                                    <label class="control-label" for="input-firstname">{{ entry_firstname }}</label>
+                                    <div class="">
+                                        <input type="text" name="firstname" value="{{ iss_register.firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="form-control" />
+                                        {% if iss_register.error_firstname %}
+                                            <div class="text-danger">{{ iss_register.error_firstname }}</div>
+                                        {% endif %} </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="input-storename">{{ entry_storename }}</label>
+                                    <div class="">
+                                        <input type="text" name="storename" value="{{ iss_register.storename }}" placeholder="{{ entry_storename }}" id="input-storename" class="form-control" />
+                                        {% if iss_register.error_storename %}
+                                            <div class="text-danger">{{ iss_register.error_storename }}</div>
+                                        {% endif %} </div>
+                                </div>
+                                <div class="form-group required">
+                                    <label class="control-label" for="input-telephone">{{ entry_telephone }}</label>
+                                    <div class="">
+                                        <input type="tel" name="telephone" value="{{ iss_register.telephone }}" placeholder="{{ entry_telephone }}" id="input-telephone" class="form-control" />
+                                        {% if iss_register.error_telephone %}
+                                            <div class="text-danger">{{ iss_register.error_telephone }}</div>
+                                        {% endif %} </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="input-email">{{ entry_email }}</label>
+                                    <div class="">
+                                        <input type="email" name="email" value="{{ iss_register.email }}" placeholder="{{ entry_email }}" id="input-email" class="form-control" />
+                                        {% if iss_register.error_email %}
+                                            <div class="text-danger">{{ iss_register.error_email }}</div>
+                                        {% endif %} </div>
+                                </div>
+
+                            </fieldset>
+                            {{ captcha }}
+                            <div class="buttons">
+                                <div class="">{{ text_agree }}
+                                    {% if iss_register.agree %}
+                                        <input type="checkbox" name="agree" value="1" checked="checked"/>
+                                    {% else %}
+                                        <input type="checkbox" name="agree" value="1" />    
+                                    {% endif %}   
+                                    {% if iss_register.error_agree %}
+                                        <div class="text-danger">{{ iss_register.error_agree }}</div>
+                                    {% endif %}
+                                    <input type="submit" value="{{ button_continue }}" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+                    
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+<!--
+    $('.send-password').on('click', function () {
+        var telephone = $('#login-input-telephone').val();
+        $.ajax({
+            url: 'index.php?route=extension/module/iss_login/send_password',
+            data: {telephone: telephone},
+            dataType: 'json',
+            success: function (json) {
+                if (json) {
+                    if (json.success) {
+                        $('.send-error').addClass('alert alert-success');
+                    } else {
+                        $('.send-error').addClass('alert alert-danger');
+                    }
+                    $('.send-error').html(json.error);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+            }
+        });
+    });
+
+//--></script>            
+<style>
+
+    header, nav{
+        display: none !important;
+    }
+    #wrapper{
+        background-image: url('./image/catalog/login-register/nilson_market_register.jpg');
+        min-height: 100vh;
+        background-size: auto;
+        position: relative;
+    }
+    #wrapper:after{
+        position: absolute;
+        content: "";
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        background-color: #00000061;
+        z-index: 1;
+    }
+    #account-login{
+        z-index: 2;
+        position: relative;
+    }
+    #account-login .buttons{
+        text-align: right;
+    }
+    .send-error{
+        margin: 1em 0 0;
+    }
+    .tab-pane, .tab-content,  .producttab {
+        margin: 0 auto !important;
+        float: initial !important;
+    }
+    .row{
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+    }
+    .nav-tabs .active a{
+        background-color: #008453  !important;
+        color: white !important;
+        border-color: #008453 !important;
+    }
+    .nav-tabs li:not(.active) a:hover{
+        background-color: #fd8204 !important;
+        color: white !important;
+        border-color: #fd8204 !important;
+    }
+    
+</style>
