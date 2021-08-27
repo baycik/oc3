@@ -1,9 +1,9 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'http://localhost:888/opencart3/public_html/');
+define('HTTP_SERVER', 'http://localhost/opencart3/public_html/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://localhost:888/opencart3/public_html/');
+define('HTTPS_SERVER', 'http://localhost/opencart3/public_html/');
 
 // DIR
 define('DIR_APPLICATION', 'W:/iSell/www/opencart3/public_html/catalog/');
